@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  stars: PropTypes.number.isRequired,
+  stars: PropTypes.number,
   onStarClick: PropTypes.func,
 };
 
 const defaultProps = {
+  stars: 0,
   onStarClick: () => null,
 };
 
@@ -16,7 +17,7 @@ const starClassName = (index, stars) => {
 
 const Stars = ({ stars, onStarClick }) => {
   return(
-    <div>
+    <span>
       {[1,2,3,4,5].map((i) => {
         return(
           <i
@@ -26,7 +27,7 @@ const Stars = ({ stars, onStarClick }) => {
           />
         );
       })}
-    </div>
+    </span>
   );
 };
 

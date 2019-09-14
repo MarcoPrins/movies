@@ -7,8 +7,12 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 import ReactOnRails from 'react-on-rails';
+import axios from 'axios';
 
 import MoviesList from '../components/movies/MoviesList';
+
+const csrfToken = document.querySelector("meta[name=csrf-token]").content
+axios.defaults.headers.common['X-CSRF-Token'] = csrfToken
 
 ReactOnRails.register({
   MoviesList,

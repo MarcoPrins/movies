@@ -16,11 +16,12 @@ class Movie < ActiveRecord::Base
   }
 
   def average_stars
+    return nil unless ratings.count > 0
     ratings.sum(:stars) / ratings.count
   end
 
-  def current_user_rating
-    # TODO: Implement
-    Rating.first
+  def user_rating(user)
+    ratings.where(user_id: user.id).first ||
+      Rating.new(movie_id: id, user_id: user.id)
   end
 end
