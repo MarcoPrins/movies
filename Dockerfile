@@ -5,6 +5,7 @@ WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 COPY . /myapp
 
 # Add a script to be executed every time the container starts.
@@ -14,4 +15,4 @@ ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
 
 # Start the main process.
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["foreman", "start", "-f", "Procfile.dev"]
