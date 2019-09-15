@@ -16,7 +16,6 @@ class RatingEditor extends Component {
     super(props);
 
     this.state = {
-      responsePending: false,
       rating: props.rating,
     };
 

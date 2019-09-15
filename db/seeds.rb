@@ -11,7 +11,7 @@ ActiveRecord::Base.transaction do
 
   10.times do |index|
     movie = Movie.create!(
-      title: 'Star Wars 1',
+      title: "Star Wars #{index}",
       text: 'Example text about this movie',
       category: (index % Movie.categories.size) + 1
     )
