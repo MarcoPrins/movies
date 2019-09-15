@@ -1,0 +1,9 @@
+<%= form_with url: '/sessions' do |f| %>
+  <%= f.label :email %>
+  <%= f.text_field :email, class: 'form-control' %>
+
+  <%= f.label :password %>
+  <%= f.password_field :password, class: 'form-control' %>
+
+  <%= f.submit 'Login', class: 'btn btn-info' %>
+<% end %>

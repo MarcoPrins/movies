@@ -4,7 +4,7 @@
     <title>MMDb</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
 
     <%= javascript_pack_tag    'application' %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -12,26 +12,28 @@
   </head>
 
   <body>
-    <nav id="main-nav" class="navbar navbar-dark bg-dark">
-      <div class="container container-fluid">
-        <div class="col-10">
-          MM<span class="pink">Db</span>
+    <nav id='main-nav' class='navbar navbar-dark bg-dark'>
+      <div class='container container-fluid'>
+        <div class='col-8'>
+          MM<span class='pink'>Db</span>
           <i class='description'>(Marco's movie database)</i>
         </div>
 
-        <div class="col-2 text-right">
+        <div class='col-4 text-right'>
           <% if current_user.present? %>
             <%= current_user.email %>
+            <span class='pink'>|</span>
+            <%= link_to 'Log Out', session_url(session[:user_email]), method: :delete %>
           <% else %>
-              Login
+            <%= link_to 'Log In', new_session_url %>
           <% end %>
         </div>
       </div>
     </nav>
 
-    <div class="container container-fluid">
-      <div class="row">
-        <div class="col-12">
+    <div class='container container-fluid'>
+      <div class='row'>
+        <div class='col-12'>
           <%= yield %>
         </div>
       </div>

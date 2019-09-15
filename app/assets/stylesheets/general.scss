@@ -1,16 +1,33 @@
+$pink: #f56991;
+$dark-grey: #777;
+$text-color: #ddd;
+
 nav#main-nav {
   margin-bottom: 40px;
   padding: 20px;
-  color: #ddd;
+  color: $text-color;
 
   span.pink {
-    color: #f56991;
+    color: $pink;
   }
 
   i.description {
-    color: #777;
+    color: $dark-grey;
     font-size: 10px;
   }
+
+  a {
+    color: white;
+
+    &:hover {
+      text-decoration: none;
+      font-weight: bold;
+    }
+  }
+}
+
+input[type='submit'] {
+  margin-top: 40px;
 }
 
 .text-right {

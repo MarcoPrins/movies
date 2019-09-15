@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    # TODO: Implement
-
-    User.first || nil
+    User.find_by_email(session[:user_email]) || nil
   end
 end
