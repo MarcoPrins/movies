@@ -9,9 +9,7 @@ import Stars from '../../../components/movies/Stars';
 const stubAxios = (moviesResponse, categoriesResponse) => {
   axios.get = jest.fn((url) => {
     if(url === '/movies') {
-      return Promise.resolve({
-        data: moviesResponse,
-      });
+      return Promise.resolve({data: moviesResponse});
     }
     else if (url === '/movies/categories') {
       return Promise.resolve({data: categoriesResponse});
@@ -96,13 +94,12 @@ describe('MoviesList', () => {
         {'action': 5, 'comedy': 6},
       );
 
-      // Two movies before clicking
       expect(component.find('tbody tr').length).toBe(2);
 
       component.find('Categories').find('button').at(0).simulate('click');
       await wait(0); component.update();
+      // TODO: expect component to be called with params: {category: 'action'}
 
-      // One movie after clicking
       expect(component.find('tbody tr').length).toBe(1);
     });
 
