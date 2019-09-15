@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
-  resources :movies
+  get "/home", to: "application#home"
+
   resources :ratings, only: [:create, :update]
+
+  resources :movies
+  get '/movies/categories', to: 'moves#categories'
 end

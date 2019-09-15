@@ -12,6 +12,13 @@
     "yarn": "^1.17.3"
   },
   "devDependencies": {
+    "enzyme": "3.9.0",
+    "enzyme-adapter-react-16": "1.12.1",
+    "jest": "24.8.0",
+    "jest-cli": "20.0.4",
     "webpack-dev-server": "2.11.2"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

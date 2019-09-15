@@ -26,7 +26,10 @@ class RatingEditor extends Component {
 
   createOrUpdateRating(stars) {
     const { rating } = this.state;
-    rating.id === null ? this.createRating(rating, stars) : this.updateRating(rating, stars);
+
+    rating.id === null ?
+      this.createRating(rating, stars) :
+      this.updateRating(rating, stars);
   }
 
   createRating(rating, stars) {
@@ -60,7 +63,6 @@ class RatingEditor extends Component {
     return(
       <div className="ratingEditor">
         <Stars stars={rating.stars} onStarClick={this.createOrUpdateRating} />
-        <small>Click to edit!</small>
       </div>
     );
   }

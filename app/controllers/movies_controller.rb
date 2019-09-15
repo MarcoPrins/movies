@@ -1,9 +1,10 @@
 class MoviesController < ApplicationController
   def index
-    @movies_list_props = {
-      movies: movies_json,
-      user: user_json,
-    }
+    render json: movies_json(Movie.all)
+  end
+
+  def categories
+    render json: {marco: 'prins'}
   end
 
   def create
@@ -20,16 +21,16 @@ class MoviesController < ApplicationController
 
   private
 
-  def movies_json
-    Movie.all.map do |movie|
+  def movies_json(movies)
+    movies.map do |movie|
       movie.serialize(
         methods: [:average_stars],
-        current_user_rating: ->(movie) { movie.user_rating(current_user) }
+        current_user_rating: ->(movie) { movie.user_rating(current_user) },
       )
     end
   end
 
-  def user_json
-    current_user.serialize(methods: [:logged_in?])
+  def movie_params
+    params.require(:movie)
   end
 end
