@@ -32,6 +32,7 @@ class MoviesList extends Component {
     return [
       'Title',
       'Text',
+      'Category',
       (user ? 'Your Rating' : 'Average Rating'),
     ];
   }
@@ -43,6 +44,7 @@ class MoviesList extends Component {
       <tr key={movie.id}>
         <td>{movie.title}</td>
         <td>{movie.text}</td>
+        <td>{movie.category}</td>
         <td>
           {user ?
             <RatingEditor rating={movie.currentUserRating} />

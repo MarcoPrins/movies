@@ -14,7 +14,7 @@ const stubAxios = (response) => {
 
 describe('MoviesList', () => {
   it('has the same number of headers as columns', async () => {
-    stubAxios([{id: 1, title: 'Movie 1', text: 'Description', averageStars: 2}]);
+    stubAxios([{id: 1, title: 'Movie 1', text: 'Description', category: 'action', averageStars: 2}]);
 
     const component = mount(<MoviesList />);
     await wait(0); component.update();
@@ -29,16 +29,16 @@ describe('MoviesList', () => {
     stubAxios([]);
 
     const componentWithoutUser = mount(<MoviesList />);
-    expect(componentWithoutUser.instance().headers()[2]).toBe('Average Rating');
+    expect(componentWithoutUser.instance().headers()[3]).toBe('Average Rating');
 
     const componentWitUser = mount(<MoviesList user={{id: 1, email: 'test@gmail.com'}} />);
-    expect(componentWitUser.instance().headers()[2]).toBe('Your Rating');
+    expect(componentWitUser.instance().headers()[3]).toBe('Your Rating');
   });
 
   it('fetches and displays movies', async () => {
     stubAxios([
-      {id: 1, title: 'Movie 1', text: 'Description 1', averageStars: 1},
-      {id: 2, title: 'Movie 2', text: 'Description 2', averageStars: 2},
+      {id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1},
+      {id: 2, title: 'Movie 2', text: 'Description 2', category: 'action', averageStars: 2},
     ]);
 
     const component = mount(<MoviesList />);
@@ -50,11 +50,13 @@ describe('MoviesList', () => {
       [
         'Movie 1',
         'Description 1',
+        'action',
         '',
       ],
       [
         'Movie 2',
         'Description 2',
+        'action',
         '',
       ],
     ]);
