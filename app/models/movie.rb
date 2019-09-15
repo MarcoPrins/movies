@@ -1,7 +1,7 @@
 class Movie < ActiveRecord::Base
   include Serializable
 
-  has_many :ratings
+  has_many :ratings, dependent: :destroy
 
   validates :category,
             :title,
@@ -23,5 +23,12 @@ class Movie < ActiveRecord::Base
   def user_rating(user)
     ratings.where(user_id: user.id).first ||
       Rating.new(movie_id: id, user_id: user.id)
+  end
+
+  def self.category_breakdown
+    all_categories = categories.keys.map do |category|
+      [category, where(category: category).count]
+    end
+    all_categories.to_h
   end
 end

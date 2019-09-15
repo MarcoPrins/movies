@@ -4,7 +4,7 @@ class MoviesController < ApplicationController
   end
 
   def categories
-    render json: {}
+    render json: Movie.category_breakdown
   end
 
   def create

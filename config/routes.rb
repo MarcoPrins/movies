@@ -3,6 +3,6 @@ Rails.application.routes.draw do
 
   resources :ratings, only: [:create, :update]
 
-  resources :movies
-  get '/movies/categories', to: 'moves#categories'
+  resources :movies, except: [:show]
+  get '/movies/categories', to: 'movies#categories'
 end
