@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import RatingEditor from './RatingEditor';
+import Categories from './Categories';
 import Stars from './Stars';
 
 const propTypes = {
@@ -15,15 +16,19 @@ class MoviesList extends Component {
 
     this.state = {
       movies: [],
+      selectedCategory: null,
     }
 
     this.headers = this.headers.bind(this);
+    this.heading = this.heading.bind(this);
     this.movieListing = this.movieListing.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
+
+    this.selectCategory = this.selectCategory.bind(this);
   }
 
   componentDidMount() {
-    this.fetchMovies({});
+    this.fetchMovies();
   }
 
   headers() {
@@ -37,6 +42,13 @@ class MoviesList extends Component {
     ];
   }
 
+  heading() {
+    const { selectedCategory } = this.state;
+    return selectedCategory ?
+      `Movies: ${selectedCategory}` :
+      'All movies';
+  }
+
   movieListing(movie) {
     const { user } = this.props;
 
@@ -44,7 +56,11 @@ class MoviesList extends Component {
       <tr key={movie.id}>
         <td>{movie.title}</td>
         <td>{movie.text}</td>
-        <td>{movie.category}</td>
+        <td>
+          <span className="badge badge-info">
+            {movie.category}
+          </span>
+        </td>
         <td>
           {user ?
             <RatingEditor rating={movie.currentUserRating} />
@@ -55,24 +71,37 @@ class MoviesList extends Component {
     );
   }
 
-  fetchMovies(params) {
-    axios.get('/movies', params)
+  fetchMovies() {
+    const { selectedCategory } = this.state;
+
+    axios.get('/movies', {params: {category: selectedCategory}})
       .then((response) => {
         this.setState({movies: response.data});
       })
       .catch(error => alert(error));
   }
 
+  selectCategory(category) {
+    const { selectedCategory } = this.state;
+    if (category === selectedCategory) category = null;
+
+    this.setState(
+      {selectedCategory: category},
+      this.fetchMovies
+    )
+  }
+
   render() {
-    const { movies } = this.state;
+    const { movies, selectedCategory } = this.state;
 
     return(
       <Fragment>
-        <h1 className='spacing-bottom'>All movies</h1>
+        <h1 className='spacing-bottom'>{this.heading()}</h1>
 
-        <div className='spacing-bottom'>
-          TODO: Categories
-        </div>
+        <Categories
+          selectedCategory={selectedCategory}
+          selectCategory={this.selectCategory}
+        />
 
         <table className='table'>
           <thead>

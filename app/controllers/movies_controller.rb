@@ -1,6 +1,10 @@
 class MoviesController < ApplicationController
   def index
-    render json: movies_json(Movie.all)
+    movies = index_params[:category].present? ?
+      Movie.where(category: index_params[:category]) :
+      Movie.all
+
+    render json: movies_json(movies)
   end
 
   def categories
@@ -30,7 +34,7 @@ class MoviesController < ApplicationController
     end
   end
 
-  def movie_params
-    params.require(:movie)
+  def index_params
+    params.permit(:category)
   end
 end

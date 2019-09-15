@@ -6,15 +6,28 @@ import axios from 'axios';
 import MoviesList from '../../../components/movies/MoviesList';
 import Stars from '../../../components/movies/Stars';
 
-const stubAxios = (response) => {
-  axios.get = jest.fn(() => Promise.resolve({
-    data: response,
-  }));
+const stubAxios = (moviesResponse, categoriesResponse) => {
+  axios.get = jest.fn((url) => {
+    if(url === '/movies') {
+      return Promise.resolve({
+        data: moviesResponse,
+      });
+    }
+    else if (url === '/movies/categories') {
+      return Promise.resolve({data: categoriesResponse});
+    }
+    else {
+      return undefined;
+    }
+  });
 };
 
 describe('MoviesList', () => {
   it('has the same number of headers as columns', async () => {
-    stubAxios([{id: 1, title: 'Movie 1', text: 'Description', category: 'action', averageStars: 2}]);
+    stubAxios(
+      [{id: 1, title: 'Movie 1', text: 'Description', category: 'action', averageStars: 2}],
+      {},
+    );
 
     const component = mount(<MoviesList />);
     await wait(0); component.update();
@@ -26,7 +39,7 @@ describe('MoviesList', () => {
   });
 
   it('displays the correct rating headers based on wheter user is present', async () => {
-    stubAxios([]);
+    stubAxios([], {});
 
     const componentWithoutUser = mount(<MoviesList />);
     expect(componentWithoutUser.instance().headers()[3]).toBe('Average Rating');
@@ -36,10 +49,13 @@ describe('MoviesList', () => {
   });
 
   it('fetches and displays movies', async () => {
-    stubAxios([
-      {id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1},
-      {id: 2, title: 'Movie 2', text: 'Description 2', category: 'action', averageStars: 2},
-    ]);
+    stubAxios(
+      [
+        {id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1},
+        {id: 2, title: 'Movie 2', text: 'Description 2', category: 'action', averageStars: 2},
+      ],
+      {},
+    );
 
     const component = mount(<MoviesList />);
     await wait(0); component.update();
@@ -62,6 +78,49 @@ describe('MoviesList', () => {
     ]);
   });
 
-  xit('fetches new movies with category filters if you click a category', () => {
+  describe('when you click a category', () => {
+    it('fetches new movies with category filters if you click a category', async () => {
+      stubAxios(
+        [
+          {id: 1, title: 'Movie 1', text: 'Action movie', category: 'action', averageStars: 1},
+          {id: 2, title: 'Movie 2', text: 'Drama movie', category: 'drama', averageStars: 1}
+        ],
+        {'action': 5, 'comedy': 6},
+      );
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      stubAxios(
+        [{id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1}],
+        {'action': 5, 'comedy': 6},
+      );
+
+      // Two movies before clicking
+      expect(component.find('tbody tr').length).toBe(2);
+
+      component.find('Categories').find('button').at(0).simulate('click');
+      await wait(0); component.update();
+
+      // One movie after clicking
+      expect(component.find('tbody tr').length).toBe(1);
+    });
+
+    it('changes the heading', async () => {
+      stubAxios(
+        [],
+        {'action': 5, 'comedy': 6},
+      );
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      expect(component.find('h1').text()).toBe('All movies');
+
+      component.find('Categories').find('button').at(0).simulate('click');
+      await wait(0); component.update();
+
+      expect(component.find('h1').text()).toBe('Movies: action');
+    });
   });
 });
