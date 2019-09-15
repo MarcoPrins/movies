@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Myapp</title>
+    <title>MMDb</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -12,8 +12,25 @@
   </head>
 
   <body>
-    <div class="container">
-      <%= yield %>
+    <nav id="main-nav" class="navbar navbar-dark bg-dark">
+      <div class="container container-fluid">
+        <div class="col-10">MMDb</div>
+        <div class="col-2 text-right">
+          <% if current_user.present? %>
+            <%= current_user.email %>
+          <% else %>
+              Login
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <%= yield %>
+        </div>
+      </div>
     </div>
   </body>
 </html>

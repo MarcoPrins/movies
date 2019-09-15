@@ -1,12 +1,14 @@
 class ApplicationController < ActionController::Base
   layout 'application'
+  helper_method :current_user
 
   def home
-    @current_user = current_user.serialize(methods: [:logged_in?])
+    @user = current_user&.serialize
   end
 
   def current_user
     # TODO: Implement
-    User.first
+
+    User.first || nil
   end
 end

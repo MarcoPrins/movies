@@ -3,8 +3,5 @@ class User < ActiveRecord::Base
 
   has_many :ratings
 
-  def logged_in?
-    # TODO: Implement
-    true
-  end
+  validates :email, presence: true
 end

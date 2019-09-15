@@ -4,6 +4,8 @@ $gold: #FC0;
 $light_gold: lighten($gold, 30%);
 
 .star {
+  cursor: not-allowed;
+
   position: relative;
 
   display: inline-block;

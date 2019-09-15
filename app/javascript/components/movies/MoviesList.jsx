@@ -6,9 +6,7 @@ import RatingEditor from './RatingEditor';
 import Stars from './Stars';
 
 const propTypes = {
-  user: PropTypes.shape({
-    loggedIn: PropTypes.bool,
-  }),
+  user: PropTypes.object,
 };
 
 class MoviesList extends Component {
@@ -29,10 +27,12 @@ class MoviesList extends Component {
   }
 
   headers() {
+    const { user } = this.props;
+
     return [
       'Title',
       'Text',
-      'Rating',
+      (user ? 'Your Rating' : 'Average Rating'),
     ];
   }
 
@@ -44,7 +44,7 @@ class MoviesList extends Component {
         <td>{movie.title}</td>
         <td>{movie.text}</td>
         <td>
-          {user.loggedIn ?
+          {user ?
             <RatingEditor rating={movie.currentUserRating} />
             :
             <Stars stars={movie.averageStars} />}

@@ -21,6 +21,8 @@ class Movie < ActiveRecord::Base
   end
 
   def user_rating(user)
+    return nil if user == nil
+
     ratings.where(user_id: user.id).first ||
       Rating.new(movie_id: id, user_id: user.id)
   end
