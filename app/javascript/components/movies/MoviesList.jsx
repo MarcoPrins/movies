@@ -67,8 +67,9 @@ class MoviesList extends Component {
     return(
       <Fragment>
         <div>
-          Hello
+          TODO: Categories
         </div>
+
         <table className='table'>
           <thead>
             <tr>
