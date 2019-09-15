@@ -6,6 +6,7 @@ import Stars from './Stars';
 
 const propTypes = {
   rating: PropTypes.shape({
+    id: PropTypes.number,
     movieId: PropTypes.number,
     stars: PropTypes.number,
   }),
@@ -58,7 +59,7 @@ class RatingEditor extends Component {
   render() {
     const { rating } = this.state;
 
-    if (rating === null) return <span>No rating available</span>;
+    if (!rating) return <span>No rating available</span>;
 
     return(
       <div className="ratingEditor">

@@ -14,14 +14,18 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
-    "babel-jest": "^22.4.3",
+    "babel-jest": "21.0.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.12.1",
     "jest": "24.8.0",
     "jest-cli": "20.0.4",
+    "waait": "*",
     "webpack-dev-server": "2.11.2"
   },
   "scripts": {
     "test": "jest"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./setupTests.js"
   }
 }

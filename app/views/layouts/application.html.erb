@@ -14,7 +14,11 @@
   <body>
     <nav id="main-nav" class="navbar navbar-dark bg-dark">
       <div class="container container-fluid">
-        <div class="col-10">MMDb</div>
+        <div class="col-10">
+          MM<span class="pink">Db</span>
+          <i class='description'>(Marco's movie database)</i>
+        </div>
+
         <div class="col-2 text-right">
           <% if current_user.present? %>
             <%= current_user.email %>

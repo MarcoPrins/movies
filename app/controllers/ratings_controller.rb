@@ -1,6 +1,11 @@
 class RatingsController < ApplicationController
   def create
-    rating = Rating.create! rating_params.permit(:stars, :movie_id).merge user_id: current_user.id
+    rating = Rating.create!(
+      rating_params
+        .permit(:stars, :movie_id)
+        .merge(user_id: current_user.id)
+    )
+
     render json: rating.serialize
   end
 

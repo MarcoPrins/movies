@@ -66,7 +66,9 @@ class MoviesList extends Component {
 
     return(
       <Fragment>
-        <div>
+        <h1 className='spacing-bottom'>All movies</h1>
+
+        <div className='spacing-bottom'>
           TODO: Categories
         </div>
 
