@@ -3,6 +3,16 @@
 $gold: #FC0;
 $light_gold: lighten($gold, 30%);
 
+.ratingEditor .star {
+  cursor: pointer;
+  opacity: 100%;
+  border-bottom: .7em solid $light-gold;
+
+  &:before, &:after {
+    border-bottom: .7em solid $light-gold;
+  }
+}
+
 .star {
   cursor: not-allowed;
 
@@ -17,7 +27,6 @@ $light_gold: lighten($gold, 30%);
   margin-bottom: 1.2em;
 
   border-right:  .3em solid transparent;
-  border-bottom: .7em solid $light-gold;
   border-left:   .3em solid transparent;
 
   &.active {
@@ -42,7 +51,6 @@ $light_gold: lighten($gold, 30%);
     left: -1em;
 
     border-right:  1em solid transparent;
-    border-bottom: .7em solid $light-gold;
     border-left:   1em solid transparent;
 
     transform: rotate(-35deg);
@@ -51,8 +59,4 @@ $light_gold: lighten($gold, 30%);
   &:after {
     transform: rotate(35deg);
   }
-}
-
-.ratingEditor .star {
-  cursor: pointer;
 }
