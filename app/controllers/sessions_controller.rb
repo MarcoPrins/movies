@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  def destroy
+  def logout
     session[:user_email] = nil
     redirect_to home_url, notice: 'Logged out!'
   end

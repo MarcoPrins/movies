@@ -22,7 +22,7 @@
           <% if current_user.present? %>
             <%= current_user.email %>
             <span class='pink'>|</span>
-            <%= link_to 'Log Out', session_url(session[:user_email]), method: :delete %>
+            <%= link_to 'Log Out', sessions_logout_url, method: :delete %>
           <% else %>
             <%= link_to 'Log In', new_session_url %>
           <% end %>
