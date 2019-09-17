@@ -1,24 +1,29 @@
-# README
+# MMDb
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Welcome to Marco's movie database!
 
-Things you may want to cover:
+I hope this is enough to demonstrate my coding style
+Some features which are irelevant to the assignment have been stubbed, such as stubbing login functionality with a plain text check.
 
-* Ruby version
+Here's a list of the assignment tasks and which ones have been done or left out:
 
-* System dependencies
+- [x] Movie: Title, Text, Ratings, Category
+- [ ] All REST Actions for movie
+- [x] Rating (5-star system) for movies
+- [x] Only logged-in users can rate
+- [x] Average rating shown for visitors
+- [x] Home page: Movies list
+- [ ] Full text search
+- [x] Filter by category (without reload)
+- [ ] Filter by rating (without reload)
+- [ ] Movie CRUD for logged-in users (In list)
+- [ ] Pagination
+- [x] Frontend testing
+- [x] Deployment on Heroku
+- [x] Code on GitHub
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Technologies:
+- [x] Rails
+- [x] Twitter bootstrap
+- [ ] Unsemantic
+- [x] React.js
