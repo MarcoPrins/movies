@@ -16,4 +16,4 @@ test:
 
 production:
   <<: *default
-  database: myapp_test
+  database: myapp_production
