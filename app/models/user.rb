@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :ratings
 
   validates :email, presence: true
+  validates :email, uniqueness: true
 
   def authenticate(password)
     # This is not a viable authentication method

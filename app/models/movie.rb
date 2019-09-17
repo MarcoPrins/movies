@@ -8,6 +8,8 @@ class Movie < ActiveRecord::Base
             :text,
             presence: true
 
+  validates :title, uniqueness: true
+
   enum category: {
     action:    1,
     drama:     2,
