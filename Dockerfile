@@ -15,4 +15,4 @@ ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
 
 # Start the main process.
-CMD ["foreman", "start", "-f", "Procfile.dev"]
+CMD ["foreman", "start", "-f", "Procfile"]
