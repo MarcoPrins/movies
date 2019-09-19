@@ -1,9 +1,6 @@
 class MoviesController < ApplicationController
   def index
-    movies = index_params[:category].present? ?
-      Movie.where(category: index_params[:category]) :
-      Movie.all
-
+    movies = apply_filters(Movie.all)
     render json: movies_json(movies)
   end
 
@@ -25,6 +22,13 @@ class MoviesController < ApplicationController
 
   private
 
+  def apply_filters(movies)
+    movies = movies.where(category: index_params[:category]) if index_params[:category].present?
+    movies = movies.page(index_params[:page]) if index_params[:page].present?
+
+    movies
+  end
+
   def movies_json(movies)
     movies.map do |movie|
       movie.serialize(
@@ -35,6 +39,6 @@ class MoviesController < ApplicationController
   end
 
   def index_params
-    params.permit(:category)
+    params.permit(:category, :page)
   end
 end

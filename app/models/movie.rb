@@ -1,6 +1,8 @@
 class Movie < ActiveRecord::Base
   include Serializable
 
+  paginates_per 10
+
   has_many :ratings, dependent: :destroy
 
   validates :category,
