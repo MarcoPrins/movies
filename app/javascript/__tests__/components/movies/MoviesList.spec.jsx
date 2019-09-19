@@ -12,7 +12,7 @@ const stubAxios = (moviesResponse, categoriesResponse) => {
       return Promise.resolve({
         data: {
           movies: moviesResponse,
-          totalPages: 1,
+          totalPages: 5,
         },
       });
     }
@@ -82,7 +82,7 @@ describe('MoviesList', () => {
   });
 
   describe('when you click a category', () => {
-    it('fetches new movies with category filters if you click a category', async () => {
+    it('fetches new movies with category filters', async () => {
       stubAxios(
         [
           {id: 1, title: 'Movie 1', text: 'Action movie', category: 'action', averageStars: 1},
@@ -101,7 +101,7 @@ describe('MoviesList', () => {
 
       expect(component.find('tbody tr').length).toBe(2);
 
-      component.find('Categories').find('button').at(0).simulate('click');
+      component.find('Categories').props().selectCategory('action');
       await wait(0); component.update();
       // TODO: expect component to be called with params: {category: 'action'}
 
@@ -119,10 +119,49 @@ describe('MoviesList', () => {
 
       expect(component.find('h1').text()).toBe('All movies');
 
-      component.find('Categories').find('button').at(0).simulate('click');
+      component.find('Categories').props().selectCategory('action');
       await wait(0); component.update();
 
       expect(component.find('h1').text()).toBe('Movies: action');
     });
+
+    it('goes back to the first page', async () => {
+      stubAxios(
+        [],
+        {'action': 5, 'comedy': 6},
+      );
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      // First go to page 2 and make sure we are there
+      component.find('PaginationLinks').find('a').at(1).simulate('click');
+      expect(component.state().page).toBe(2);
+
+      // Click the category
+      component.find('Categories').props().selectCategory('action');
+      await wait(0); component.update();
+
+      // Then check that we go back to page 1
+      expect(axios.get).toHaveBeenCalledWith(
+        '/movies', {'params': {'category': 'action', 'page': 1}}
+      );
+      expect(component.state().page).toBe(1);
+    });
   });
+
+  describe('when you click a pagination link', () => {
+    it('fetches the new page', async () => {
+      stubAxios([], {});
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      component.find('PaginationLinks').props().onPageClick(2);
+
+      expect(axios.get).toHaveBeenCalledWith(
+        '/movies', {'params': {'category': null, 'page': 2}}
+      );
+    })
+  })
 });

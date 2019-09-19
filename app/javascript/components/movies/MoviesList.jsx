@@ -5,6 +5,7 @@ import axios from 'axios';
 import RatingEditor from './RatingEditor';
 import Categories from './Categories';
 import Stars from './Stars';
+import PaginationLinks from '../shared/PaginationLinks';
 
 const propTypes = {
   user: PropTypes.object,
@@ -16,6 +17,8 @@ class MoviesList extends Component {
 
     this.state = {
       movies: [],
+      page: 1,
+      totalPages: 1,
       selectedCategory: null,
     }
 
@@ -23,7 +26,7 @@ class MoviesList extends Component {
     this.heading = this.heading.bind(this);
     this.movieListing = this.movieListing.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
-
+    this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
   }
 
@@ -72,11 +75,19 @@ class MoviesList extends Component {
   }
 
   fetchMovies() {
-    const { selectedCategory } = this.state;
+    const { selectedCategory, page } = this.state;
 
-    axios.get('/movies', {params: {category: selectedCategory}})
+    axios.get('/movies', {
+      params: {
+        category: selectedCategory,
+        page,
+      },
+    })
       .then((response) => {
-        this.setState({movies: response.data});
+        this.setState({
+          movies: response.data.movies,
+          totalPages: response.data.totalPages,
+        });
       })
       .catch(error => alert(error));
   }
@@ -86,13 +97,17 @@ class MoviesList extends Component {
     if (category === selectedCategory) category = null;
 
     this.setState(
-      {selectedCategory: category},
+      {selectedCategory: category, page: 1},
       this.fetchMovies
-    )
+    );
+  }
+
+  selectPage(page) {
+    this.setState({ page }, this.fetchMovies);
   }
 
   render() {
-    const { movies, selectedCategory } = this.state;
+    const { movies, selectedCategory, page, totalPages } = this.state;
 
     return(
       <Fragment>
@@ -114,6 +129,13 @@ class MoviesList extends Component {
             {movies.map((movie) => this.movieListing(movie))}
           </tbody>
         </table>
+
+        <PaginationLinks
+          page={page}
+          totalPages={totalPages}
+          onPageClick={this.selectPage}
+          autoHide
+        />
       </Fragment>
     );
   }
