@@ -48,17 +48,21 @@ describe MoviesController, type: :controller do
     end
 
     it 'returns paginated movies if page param is passed' do
-      # In this example pagination is stubbed
-      # This is to maintain a pure unit test focussing only on the controller action
-      # and not kaminari functionality
-      expect(Movie).to receive(:page).with('7').and_return(Movie.limit(1))
+      # Pagination is stubbed for simplicity & to maintain focus of this unit test
+      # on controller functionality rather than kaminari funcionality
+      expect(Movie).to receive(:page).with('1').and_return(Movie.page(1).per(1))
 
-      get :index, params: { page: 7 }
+      get :index, params: { page: 1 }
       expect(fetch_movies_from(response)).to eq([movies[0]])
+    end
+
+    it 'returns total pages' do
+      get :index
+      expect(JSON.parse(response.body)['totalPages']).to eq(1)
     end
   end
 
   def fetch_movies_from(response)
-    JSON.parse(response.body).map{ |hash| extract_attributes(hash) }
+    JSON.parse(response.body)['movies'].map{ |hash| extract_attributes(hash) }
   end
 end

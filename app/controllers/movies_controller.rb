@@ -1,7 +1,11 @@
 class MoviesController < ApplicationController
   def index
     movies = apply_filters(Movie.all)
-    render json: movies_json(movies)
+
+    render json: {
+      movies: movies_json(movies),
+      totalPages: movies.total_pages,
+    }
   end
 
   def categories
@@ -24,7 +28,7 @@ class MoviesController < ApplicationController
 
   def apply_filters(movies)
     movies = movies.where(category: index_params[:category]) if index_params[:category].present?
-    movies = movies.page(index_params[:page]) if index_params[:page].present?
+    movies = movies.page(index_params[:page])
 
     movies
   end

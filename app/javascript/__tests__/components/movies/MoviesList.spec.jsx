@@ -9,7 +9,12 @@ import Stars from '../../../components/movies/Stars';
 const stubAxios = (moviesResponse, categoriesResponse) => {
   axios.get = jest.fn((url) => {
     if(url === '/movies') {
-      return Promise.resolve({data: moviesResponse});
+      return Promise.resolve({
+        data: {
+          movies: moviesResponse,
+          totalPages: 1,
+        },
+      });
     }
     else if (url === '/movies/categories') {
       return Promise.resolve({data: categoriesResponse});
