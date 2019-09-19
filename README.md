@@ -23,7 +23,7 @@ Here's a list of the assignment tasks and which ones have been done or left out:
 - [x] Filter by category (without reload)
 - [ ] Filter by rating (without reload)
 - [ ] Movie CRUD for logged-in users (In list)
-- [ ] Pagination
+- [x] Pagination
 - [x] Frontend testing
 - [x] Deployment on Heroku
 - [x] Code on GitHub

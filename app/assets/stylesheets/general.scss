@@ -2,6 +2,9 @@ $pink: #f56991;
 $dark-grey: #777;
 $text-color: #ddd;
 
+// For anchors without href, such as the ones that only use onClick bindings
+a { cursor: pointer; }
+
 nav#main-nav {
   margin-bottom: 40px;
   padding: 20px;
@@ -40,4 +43,9 @@ input[type='submit'] {
 
 button.button {
   padding-right: 10px;
+}
+
+ul.pagination li.page-item.active a.page-link {
+  background-color: $pink;
+  border-color: $pink;
 }
