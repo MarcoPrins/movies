@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   end
 
   def create
-    movie = Movie.new(**movie_params, user_id: current_user.id)
+    movie = Movie.new(movie_params.merge({ user_id: current_user.id }))
     run_and_respond(movie, ->(movie) { movie.save } )
   end
 
@@ -30,7 +30,7 @@ class MoviesController < ApplicationController
   private
 
   def find_movie
-    @movie = Movie.find(params[:id])
+    @movie = current_user.movies.find(params[:id])
   end
 
   def apply_filters(movies)
@@ -50,7 +50,7 @@ class MoviesController < ApplicationController
   end
 
   def movie_params
-    params.require(:movie).permit(:title, :text)
+    params.require(:movie).permit(:title, :text, :category)
   end
 
   def index_params

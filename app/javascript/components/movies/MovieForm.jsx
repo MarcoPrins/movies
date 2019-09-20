@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+import Categories from './Categories';
+
 const propTypes = {
   movie: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
     text: PropTypes.string,
+    category: PropTypes.string,
   }),
   successCallback: PropTypes.func,
 };
@@ -23,6 +26,7 @@ class MovieForm extends Component {
     this.state = {
       title: '',
       text: '',
+      category: '',
       ...props.movie,
     }
 
@@ -39,12 +43,13 @@ class MovieForm extends Component {
   }
 
   createMovie() {
-    const { title, text } = this.state;
+    const { title, text, category } = this.state;
     const { movie, successCallback } = this.props;
 
     axios.post('/movies', {
       title,
       text,
+      category,
     })
       .then((response) => {
         alert('Movie created');
@@ -54,12 +59,13 @@ class MovieForm extends Component {
   }
 
   updateMovie() {
-    const { title, text } = this.state;
+    const { title, text, category } = this.state;
     const { movie, successCallback } = this.props;
 
     axios.put(`/movies/${movie.id}`, {
       title,
       text,
+      category,
     })
       .then((response) => {
         alert('Movie updated');
@@ -76,7 +82,7 @@ class MovieForm extends Component {
 
   render() {
     const { id } = this.props.movie;
-    const { title, text } = this.state;
+    const { title, text, category } = this.state;
     const inputProps = {
       className: 'form-control',
       onChange: this.handleChange,
@@ -103,6 +109,18 @@ class MovieForm extends Component {
             {...inputProps}
           />
         </div>
+
+        <Categories
+          selectedCategory={category}
+          selectCategory={
+            (category) => this.handleChange({
+              target: {
+                name: 'category',
+                value: category,
+              }
+            })
+          }
+        />
 
         <button className='btn btn-info' type='submit' onClick={this.createOrUpdateMovie}>
           {id ? 'Update movie' : 'Create movie'}
