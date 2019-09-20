@@ -2,9 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import RatingEditor from './RatingEditor';
+import MovieListing from './MoviesList/MovieListing';
 import Categories from './Categories';
-import Stars from './Stars';
 import PaginationLinks from '../shared/PaginationLinks';
 
 const propTypes = {
@@ -24,7 +23,6 @@ class MoviesList extends Component {
 
     this.headers = this.headers.bind(this);
     this.heading = this.heading.bind(this);
-    this.movieListing = this.movieListing.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
     this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
@@ -42,6 +40,7 @@ class MoviesList extends Component {
       'Text',
       'Category',
       (user ? 'Your Rating' : 'Average Rating'),
+      'Edit',
     ];
   }
 
@@ -50,28 +49,6 @@ class MoviesList extends Component {
     return selectedCategory ?
       `Movies: ${selectedCategory}` :
       'All movies';
-  }
-
-  movieListing(movie) {
-    const { user } = this.props;
-
-    return(
-      <tr key={movie.id}>
-        <td>{movie.title}</td>
-        <td>{movie.text}</td>
-        <td>
-          <span className="badge badge-info">
-            {movie.category}
-          </span>
-        </td>
-        <td>
-          {user ?
-            <RatingEditor rating={movie.currentUserRating} />
-            :
-            <Stars stars={movie.averageStars} />}
-        </td>
-      </tr>
-    );
   }
 
   fetchMovies() {
@@ -108,6 +85,7 @@ class MoviesList extends Component {
 
   render() {
     const { movies, selectedCategory, page, totalPages } = this.state;
+    const { user } = this.props;
 
     return(
       <Fragment>
@@ -126,7 +104,7 @@ class MoviesList extends Component {
           </thead>
 
           <tbody>
-            {movies.map((movie) => this.movieListing(movie))}
+            {movies.map(movie => <MovieListing key={movie.id} user={user} movie={movie} />)}
           </tbody>
         </table>
 
