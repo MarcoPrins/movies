@@ -3,11 +3,13 @@ class Movie < ActiveRecord::Base
 
   paginates_per 10
 
+  belongs_to :user
   has_many :ratings, dependent: :destroy
 
   validates :category,
             :title,
             :text,
+            :user_id,
             presence: true
 
   validates :title, uniqueness: true
