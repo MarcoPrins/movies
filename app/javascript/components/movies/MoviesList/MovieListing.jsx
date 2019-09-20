@@ -26,11 +26,13 @@ class MovieListing extends Component {
 
     this.state = {
       editing: false,
+      movie: props.movie,
     };
 
     this.toggleEdit = this.toggleEdit.bind(this);
     this.ratingColumn = this.ratingColumn.bind(this);
     this.editColumn = this.editColumn.bind(this);
+    this.afterUpdate = this.afterUpdate.bind(this);
   }
 
   toggleEdit() {
@@ -49,13 +51,13 @@ class MovieListing extends Component {
   }
 
   editColumn() {
-    const { user, movie } = this.props;
-    const { editing } = this.state;
+    const { user } = this.props;
+    const { editing, movie } = this.state;
 
     if (editing) {
       return(
         <Modal title='Edit Movie' toggle={this.toggleEdit} open={editing}>
-          <MovieForm movie={movie} />
+          <MovieForm movie={movie} successCallback={this.afterUpdate} />
         </Modal>
       );
     }
@@ -67,9 +69,16 @@ class MovieListing extends Component {
     }
   }
 
+  afterUpdate(response) {
+    this.setState(
+      { movie: response.data },
+      this.toggleEdit
+    );
+  }
+
   render() {
-    const { user, movie } = this.props;
-    const { editing } = this.state;
+    const { user } = this.props;
+    const { editing, movie } = this.state;
 
     return(
       <tr key={movie.id}>

@@ -13,18 +13,25 @@ class MoviesController < ApplicationController
   end
 
   def create
-    # TODO:
+    movie = Movie.new(**movie_params, user_id: current_user.id)
+    run_and_respond(movie, ->(movie) { movie.save } )
   end
 
   def update
-    # TODO:
+    find_movie
+    run_and_respond(@movie, ->(movie) { movie.update(movie_params) })
   end
 
   def destroy
-    # TODO:
+    find_movie
+    run_and_respond(@movie, ->(movie) { movie.destroy })
   end
 
   private
+
+  def find_movie
+    @movie = Movie.find(params[:id])
+  end
 
   def apply_filters(movies)
     movies = movies.where(category: index_params[:category]) if index_params[:category].present?
@@ -40,6 +47,10 @@ class MoviesController < ApplicationController
         current_user_rating: ->(movie) { movie.user_rating(current_user) },
       )
     end
+  end
+
+  def movie_params
+    params.require(:movie).permit(:title, :text)
   end
 
   def index_params

@@ -14,5 +14,6 @@ describe('MovieListing', () => {
 
   describe('editing a movie', () => {
     it('opens a modal with movie form');
+    it('updates after editing a movie');
   });
 });
