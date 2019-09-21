@@ -100,7 +100,7 @@ describe('MoviesList', () => {
 
       expect(component.find('tbody tr').length).toBe(0);
 
-      component.find('Categories').props().selectCategory('action');
+      component.find('Facets').at(0).props().selectFacet('action');
       await wait(0); component.update();
 
       expect(component.find('tbody tr').length).toBe(1);
@@ -117,7 +117,7 @@ describe('MoviesList', () => {
 
       expect(component.find('h1').text()).toBe('All movies');
 
-      component.find('Categories').props().selectCategory('action');
+      component.find('Facets').at(0).props().selectFacet('action');
       await wait(0); component.update();
 
       expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: 'action', page: 1, search: ''}});
@@ -138,7 +138,7 @@ describe('MoviesList', () => {
       expect(component.state().page).toBe(2);
 
       // Click the category
-      component.find('Categories').props().selectCategory('action');
+      component.find('Facets').at(0).props().selectFacet('action');
       await wait(0); component.update();
 
       // Then check that we go back to page 1

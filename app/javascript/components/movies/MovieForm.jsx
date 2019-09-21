@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import Categories from './Categories';
+import Facets from './Facets';
 
 const propTypes = {
   movie: PropTypes.shape({
@@ -113,11 +113,11 @@ class MovieForm extends Component {
           />
         </div>
 
-        <Categories
-          categories={categories}
-          selectedCategory={category}
+        <Facets
+          facets={categories}
+          selectedFacet={category}
           showCount={false}
-          selectCategory={
+          selectFacet={
             (category) => this.handleChange({
               target: {
                 name: 'category',

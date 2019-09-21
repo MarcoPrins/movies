@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import NewMovieButton from './NewMovieButton';
 import MovieListing from './MoviesList/MovieListing';
-import Categories from './Categories';
+import Facets from './Facets';
 import PaginationLinks from '../shared/PaginationLinks';
 
 const propTypes = {
@@ -36,7 +36,7 @@ class MoviesList extends Component {
 
     // Actions
     this.selectPage = this.selectPage.bind(this);
-    this.selectCategory = this.selectCategory.bind(this);
+    this.selectFacet = this.selectFacet.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
   }
 
@@ -95,10 +95,10 @@ class MoviesList extends Component {
       .catch(error => alert(error));
   }
 
-  selectCategory(category) {
-    const { selectedCategory } = this.state;
-    if (category === selectedCategory) category = null;
-    this.updateFilter({target: {name: 'selectedCategory', value: category}});
+  selectFacet(name, value) {
+    const selectedFacet = this.state[name];
+    if (value === selectedFacet) value = null;
+    this.updateFilter({target: {name: name, value: value}});
   }
 
   selectPage(page) {
@@ -128,10 +128,10 @@ class MoviesList extends Component {
           placeholder='Search title or text'
         />
 
-        <Categories
-          categories={categories}
-          selectedCategory={selectedCategory}
-          selectCategory={this.selectCategory}
+        <Facets
+          facets={categories}
+          selectedFacet={selectedCategory}
+          selectFacet={(value) => this.selectFacet('selectedCategory', value)}
         />
 
         <table className='table'>
