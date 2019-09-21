@@ -14,6 +14,8 @@ class Movie < ActiveRecord::Base
 
   validates :title, uniqueness: true
 
+  default_scope { order('created_at DESC') }
+
   enum category: {
     action:    1,
     drama:     2,

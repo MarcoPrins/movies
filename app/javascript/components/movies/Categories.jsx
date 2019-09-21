@@ -6,14 +6,16 @@ const propTypes = {
   categories: PropTypes.object,
   selectCategory: PropTypes.func,
   selectedCategory: PropTypes.string,
+  showCount: PropTypes.bool,
 };
 
 const defaultProps = {
   selectCategory: () => null,
   categories: {},
+  showCount: true
 };
 
-const Categories = ({ selectCategory, selectedCategory, categories }) => {
+const Categories = ({ selectCategory, selectedCategory, categories, showCount }) => {
   const categoryNames = Object.keys(categories);
 
   return(
@@ -26,7 +28,7 @@ const Categories = ({ selectCategory, selectedCategory, categories }) => {
             type='button'
             className={`btn btn-info ${selectedCategory === category ? 'active' : ''}`}
           >
-            {category} ({categories[category]})
+            {category} {showCount && <span>({categories[category]})</span>}
           </button>
         );
       })}

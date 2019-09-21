@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 const propTypes = {
   title: PropTypes.string.isRequired,
   toggle: PropTypes.func.isRequired,
-  open: PropTypes.bool,
 };
 
-const Modal = ({ title, open, toggle, children }) => {
+const Modal = ({ title, toggle, children }) => {
   return (
     <div className='modal' tabIndex='-1' role='dialog'>
       <div className='modal-dialog' role='document'>

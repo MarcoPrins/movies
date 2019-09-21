@@ -116,6 +116,7 @@ class MovieForm extends Component {
         <Categories
           categories={categories}
           selectedCategory={category}
+          showCount={false}
           selectCategory={
             (category) => this.handleChange({
               target: {
@@ -126,9 +127,11 @@ class MovieForm extends Component {
           }
         />
 
-        <button className='btn btn-info' type='submit' onClick={this.createOrUpdateMovie}>
-          {id ? 'Update movie' : 'Create movie'}
-        </button>
+        <div>
+          <button className='btn btn-primary' type='submit' onClick={this.createOrUpdateMovie}>
+            {id ? 'Update movie' : 'Create movie'}
+          </button>
+        </div>
       </form>
 
     );

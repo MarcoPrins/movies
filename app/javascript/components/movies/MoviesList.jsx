@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+import NewMovieButton from './NewMovieButton';
 import MovieListing from './MoviesList/MovieListing';
 import Categories from './Categories';
 import PaginationLinks from '../shared/PaginationLinks';
@@ -10,6 +11,7 @@ const propTypes = {
   user: PropTypes.object,
 };
 
+// Container
 class MoviesList extends Component {
   constructor(props) {
     super(props);
@@ -22,22 +24,22 @@ class MoviesList extends Component {
       selectedCategory: null,
     }
 
+    // Computed fields
     this.headers = this.headers.bind(this);
     this.heading = this.heading.bind(this);
+
+    // Data fetching
     this.fetchData = this.fetchData.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
     this.fetchCategories = this.fetchCategories.bind(this);
+
+    // Actions
     this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
   }
 
   componentDidMount() {
     this.fetchData();
-  }
-
-  fetchData() {
-    this.fetchMovies();
-    this.fetchCategories();
   }
 
   headers() {
@@ -57,6 +59,11 @@ class MoviesList extends Component {
     return selectedCategory ?
       `Movies: ${selectedCategory}` :
       'All movies';
+  }
+
+  fetchData() {
+    this.fetchMovies();
+    this.fetchCategories();
   }
 
   fetchMovies() {
@@ -100,12 +107,14 @@ class MoviesList extends Component {
   }
 
   render() {
-    const { movies, selectedCategory, page, totalPages, categories } = this.state;
+    const { movies, selectedCategory, page, totalPages, categories, creatingNewMovie } = this.state;
     const { user } = this.props;
 
     return(
       <Fragment>
         <h1 className='spacing-bottom'>{this.heading()}</h1>
+
+        <NewMovieButton successCallback={this.fetchData} categories={categories} />
 
         <Categories
           categories={categories}
