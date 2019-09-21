@@ -23,18 +23,22 @@ class MoviesController < ApplicationController
 
   def update
     find_movie
+    render json: {}, status: 403 and return if @movie.nil?
+
     run_and_respond(@movie, ->(movie) { movie.update(movie_params) })
   end
 
   def destroy
     find_movie
+    render json: {}, status: 403 and return if @movie.nil?
+
     run_and_respond(@movie, ->(movie) { movie.destroy })
   end
 
   private
 
   def find_movie
-    @movie = current_user.movies.find(params[:id])
+    @movie = current_user.movies.where(id: params[:id]).first
   end
 
   def apply_filters(movies)

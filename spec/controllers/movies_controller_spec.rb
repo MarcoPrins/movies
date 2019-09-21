@@ -1,13 +1,6 @@
 require 'rails_helper'
 
 describe MoviesController, type: :controller do
-  before :each do
-    @user = create :user
-    @movie_1 = create :movie, category: :action, title: 'Action movie', user_id: @user.id
-    @movie_2 = create :movie, category: :suspense, title: 'Suspense movie', user_id: @user.id
-    @movie_3 = create :movie, category: :suspense, title: 'Suspense movie 2', user_id: @user.id
-  end
-
   let(:movies) {
     [
       {
@@ -38,6 +31,13 @@ describe MoviesController, type: :controller do
   }
 
   describe 'GET index' do
+    before :each do
+      @user = create :user
+      @movie_1 = create :movie, category: :action, title: 'Action movie', user_id: @user.id
+      @movie_2 = create :movie, category: :suspense, title: 'Suspense movie', user_id: @user.id
+      @movie_3 = create :movie, category: :suspense, title: 'Suspense movie 2', user_id: @user.id
+    end
+
     it 'returns all movies as json without params' do
       get :index
       expect(fetch_movies_from(response)).to eq(movies)
@@ -96,15 +96,89 @@ describe MoviesController, type: :controller do
   end
 
   describe 'POST create' do
-    it 'creates a movie'
+    it 'creates a movie for the current user and returns it' do
+      attrs = { title: 'Movie One', text: 'Description', category: 'action' }
+
+      user = create :user
+      expect_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      post :create, params: { movie: attrs }
+      expect(extract_attributes(JSON.parse(response.body))).to eq({
+        'category' => 'action',
+        'text' => 'Description',
+        'title' => 'Movie One',
+        'userId' => user.id,
+      })
+
+      movie = Movie.last
+      expect(movie.user_id).to eq(user.id)
+      expect(movie.title).to eq('Movie One')
+      expect(movie.text).to eq('Description')
+      expect(movie.category).to eq('action')
+    end
   end
 
   describe 'PUT update' do
-    it 'updates a movie'
+    it 'updates a movie belonging to the current user and returns it' do
+      user = create :user
+      movie = create :movie, user_id: user.id
+
+      expect_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      put :update, params: { id: movie.id, movie: { title: 'New title', text: 'New text' } }
+
+      attrs = JSON.parse(response.body)
+      expect(attrs['id']).to eq(movie.id)
+      expect(attrs['title']).to eq('New title')
+      expect(attrs['text']).to eq('New text')
+
+      movie.reload
+      expect(movie.title).to eq('New title')
+    end
+
+    it 'does not update a movie that does not belong to the current user' do
+      user = create :user
+      movie = create :movie
+
+      expect_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      put :update, params: { id: movie.id, movie: { title: 'New title', text: 'New text' } }
+
+      expect(response.status).to eq(403)
+
+      movie.reload
+      expect(movie.title).not_to eq('New title')
+    end
   end
 
   describe 'DELETE destroy' do
-    it 'destroys a movie'
+    it 'destroys a movie belonging to the current user' do
+      user = create :user
+      movie = create :movie, user_id: user.id
+
+      expect_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      delete :destroy, params: { id: movie.id }
+
+      attrs = JSON.parse(response.body)
+      expect(attrs['id']).to eq(movie.id)
+      expect(attrs['title']).to eq(movie.title)
+
+      expect(Movie.where(id: movie.id).count).to eq(0)
+    end
+
+    it 'does not destroy a movie that does not belong to the current user' do
+      user = create :user
+      movie = create :movie
+
+      expect_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      delete :destroy, params: { id: movie.id }
+
+      expect(response.status).to eq(403)
+
+      expect(Movie.where(id: movie.id).count).to eq(1)
+    end
   end
 
   def fetch_movies_from(response)
