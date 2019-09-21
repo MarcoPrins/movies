@@ -88,7 +88,7 @@ class MoviesList extends Component {
   }
 
   fetchCategories() {
-    axios.get('/movies/categories')
+    axios.get('/movies/category_breakdown')
       .then((response) => {
         this.setState({categories: response.data})
       })

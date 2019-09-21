@@ -16,7 +16,7 @@ const stubAxios = (moviesResponse, categoriesResponse) => {
         },
       });
     }
-    else if (url === '/movies/categories') {
+    else if (url === '/movies/category_breakdown') {
       return Promise.resolve({data: categoriesResponse});
     }
     else {

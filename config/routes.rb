@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   get '/sessions/logout', to: 'sessions#logout'
 
   resources :movies, except: [:show]
-  get '/movies/categories', to: 'movies#categories'
+  get '/movies/category_breakdown', to: 'movies#category_breakdown'
+  get '/movies/rating_breakdown', to: 'movies#rating_breakdown'
 end

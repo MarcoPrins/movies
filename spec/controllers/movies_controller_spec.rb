@@ -68,6 +68,24 @@ describe MoviesController, type: :controller do
     end
   end
 
+  describe 'GET category_breakdown' do
+    it 'returns the category breakdown' do
+      expect(Movie).to receive(:category_breakdown).and_return({'drama' => 8})
+
+      get :category_breakdown
+      expect(response.body).to eq("{\"drama\":8}")
+    end
+  end
+
+  describe 'GET ratings_breakdown' do
+    it 'returns the ratings breakdown' do
+      expect(Rating).to receive(:rating_breakdown).and_return({1 => 8})
+
+      get :rating_breakdown
+      expect(response.body).to eq("{\"1\":8}")
+    end
+  end
+
   describe 'POST create' do
     it 'creates a movie'
   end
