@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import NewMovieButton from './NewMovieButton';
 import MovieListing from './MoviesList/MovieListing';
-import Categories from './Categories';
+import Facets from './Facets';
 import PaginationLinks from '../shared/PaginationLinks';
 
 const propTypes = {
@@ -19,24 +19,26 @@ class MoviesList extends Component {
     this.state = {
       movies: [],
       categories: {},
+      ratings: {},
+      selectedCategory: null,
+      selectedRating: null,
       page: 1,
       totalPages: 1,
-      selectedCategory: null,
       search: '',
     }
 
     // Computed fields
     this.headers = this.headers.bind(this);
-    this.heading = this.heading.bind(this);
 
     // Data fetching
     this.fetchData = this.fetchData.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
     this.fetchCategories = this.fetchCategories.bind(this);
+    this.fetchRatings = this.fetchRatings.bind(this);
 
     // Actions
     this.selectPage = this.selectPage.bind(this);
-    this.selectCategory = this.selectCategory.bind(this);
+    this.selectFacet = this.selectFacet.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
   }
 
@@ -56,24 +58,19 @@ class MoviesList extends Component {
     ];
   }
 
-  heading() {
-    const { selectedCategory } = this.state;
-    return selectedCategory ?
-      `Movies: ${selectedCategory}` :
-      'All movies';
-  }
-
   fetchData() {
     this.fetchMovies();
     this.fetchCategories();
+    this.fetchRatings();
   }
 
   fetchMovies() {
-    const { selectedCategory, page, search } = this.state;
+    const { selectedCategory, selectedRating, page, search } = this.state;
 
     axios.get('/movies', {
       params: {
         category: selectedCategory,
+        rating: selectedRating,
         page,
         search,
       },
@@ -88,17 +85,25 @@ class MoviesList extends Component {
   }
 
   fetchCategories() {
-    axios.get('/movies/categories')
+    axios.get('/movies/category_breakdown')
       .then((response) => {
         this.setState({categories: response.data})
       })
       .catch(error => alert(error));
   }
 
-  selectCategory(category) {
-    const { selectedCategory } = this.state;
-    if (category === selectedCategory) category = null;
-    this.updateFilter({target: {name: 'selectedCategory', value: category}});
+  fetchRatings() {
+    axios.get('/movies/rating_breakdown')
+      .then((response) => {
+        this.setState({ratings: response.data})
+      })
+      .catch(error => alert(error));
+  }
+
+  selectFacet(name, value) {
+    const selectedFacet = this.state[name];
+    if (value === selectedFacet) value = null;
+    this.updateFilter({target: {name: name, value: value}});
   }
 
   selectPage(page) {
@@ -111,12 +116,12 @@ class MoviesList extends Component {
   }
 
   render() {
-    const { movies, selectedCategory, page, totalPages, categories, creatingNewMovie, search } = this.state;
+    const { movies, selectedCategory, selectedRating, page, totalPages, categories, ratings, creatingNewMovie, search } = this.state;
     const { user } = this.props;
 
     return(
       <Fragment>
-        <h1 className='spacing-bottom'>{this.heading()}</h1>
+        <h1 className='spacing-bottom'>Movies</h1>
         <NewMovieButton successCallback={this.fetchData} categories={categories} />
 
         <input
@@ -128,11 +133,24 @@ class MoviesList extends Component {
           placeholder='Search title or text'
         />
 
-        <Categories
-          categories={categories}
-          selectedCategory={selectedCategory}
-          selectCategory={this.selectCategory}
-        />
+        <div>
+          Filter by category:
+          <Facets
+            facets={categories}
+            selectedFacet={selectedCategory}
+            selectFacet={(value) => this.selectFacet('selectedCategory', value)}
+          />
+        </div>
+
+        {user &&
+          <div>
+            Filter by your rating:
+            <Facets
+              facets={ratings}
+              selectedFacet={selectedRating}
+              selectFacet={(value) => this.selectFacet('selectedRating', value)}
+            />
+          </div>}
 
         <table className='table'>
           <thead>

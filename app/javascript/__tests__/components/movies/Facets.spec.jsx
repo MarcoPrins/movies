@@ -3,12 +3,12 @@ import { mount } from 'enzyme';
 import axios from 'axios';
 import wait from 'waait';
 
-import Categories from '../../../components/movies/Categories';
+import Facets from '../../../components/movies/Facets';
 
-describe('Categories', () => {
-  it('fetches categories and displays buttons for each of them, with selected one active', async () => {
+describe('Facets', () => {
+  it('displays buttons for each facet, with selected one active', async () => {
     const component = mount(
-      <Categories categories={{action: 2, drama: 1, suspense: 8}} selectedCategory='drama' />
+      <Facets facets={{action: 2, drama: 1, 'Facet with a string name': 8}} selectedFacet='drama' />
     );
     await wait(0); component.update();
 
@@ -21,13 +21,13 @@ describe('Categories', () => {
     expect(buttons.map(button => button.text())).toEqual([
       'action (2)',
       'drama (1)',
-      'suspense (8)',
+      'Facet with a string name (8)',
     ]);
   });
 
   it('can hide the total count numbers', async () => {
     const component = mount(
-      <Categories categories={{action: 2, drama: 1}} showCount={false} selectedCategory='drama' />
+      <Facets facets={{action: 2, drama: 1}} showCount={false} selectedFacet='drama' />
     );
     await wait(0); component.update();
 
@@ -38,11 +38,11 @@ describe('Categories', () => {
     ]);
   });
 
-  it('calls the passed in selectCategory function when clicking a category', async () => {
+  it('calls the passed in selectFacet function when clicking a category', async () => {
     const mockFunction = jest.fn();
 
     const component = mount(
-      <Categories categories={{action: 1, drama: 2, comedy: 3}} selectedCategory='drama' selectCategory={mockFunction} />
+      <Facets facets={{action: 1, drama: 2, comedy: 3}} selectedFacet='drama' selectFacet={mockFunction} />
     );
 
     await wait(0); component.update();

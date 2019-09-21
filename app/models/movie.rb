@@ -14,7 +14,7 @@ class Movie < ActiveRecord::Base
 
   validates :title, uniqueness: true
 
-  default_scope { order('created_at DESC') }
+  default_scope { order('movies.created_at DESC') }
   scope :search, ->(term) { where('title ilike ? OR text ilike ?', "%#{term}%", "%#{term}%") }
 
   enum category: {
@@ -34,6 +34,12 @@ class Movie < ActiveRecord::Base
 
     ratings.where(user_id: user.id).first ||
       Rating.new(movie_id: id, user_id: user.id)
+  end
+
+  def self.by_user_rating(user, stars)
+    joins(:ratings)
+      .where('ratings.user_id = ?', user.id)
+      .where('ratings.stars = ?', stars)
   end
 
   def self.category_breakdown

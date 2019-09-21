@@ -10,6 +10,11 @@ const propTypes = {
     movieId: PropTypes.number,
     stars: PropTypes.number,
   }),
+  successCallback: PropTypes.func,
+};
+
+const defaultProps = {
+  successCallback: () => null,
 };
 
 class RatingEditor extends Component {
@@ -34,23 +39,27 @@ class RatingEditor extends Component {
   }
 
   createRating(rating, stars) {
+    const { successCallback } = this.props;
+
     axios.post('/ratings', {
       stars: stars,
       movie_id: rating.movieId,
     })
       .then((response) => {
-        this.setState({rating: response.data});
+        this.setState({rating: response.data}, successCallback);
         alert('Rating created');
       })
       .catch(error => alert(error));
   }
 
   updateRating(rating, stars) {
+    const { successCallback } = this.props;
+
     axios.put(`/ratings/${rating.id}`, {
       stars: stars,
     })
       .then((response) => {
-        this.setState({rating: response.data});
+        this.setState({rating: response.data}, successCallback);
         alert('Rating updated');
       })
       .catch(error => alert(error));
@@ -70,4 +79,5 @@ class RatingEditor extends Component {
 }
 
 RatingEditor.propTypes = propTypes;
+RatingEditor.defaultProps = defaultProps;
 export default RatingEditor;

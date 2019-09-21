@@ -20,7 +20,7 @@ describe('MovieForm', () => {
     );
     component.find('input').at(0).simulate('change', {target: {value: 'Movie 1', name: 'title'}});
     component.find('input').at(0).simulate('change', {target: {value: 'Test description', name: 'text'}});
-    component.find('Categories').find('button').at(0).simulate('click');
+    component.find('Facets').find('button').at(0).simulate('click');
     component.find('button[type="submit"]').at(0).simulate('click');
 
     await wait(10); component.update();
@@ -43,7 +43,7 @@ describe('MovieForm', () => {
     );
     component.find('input').at(0).simulate('change', {target: {value: 'Movie 1 EDIT', name: 'title'}});
     component.find('input').at(0).simulate('change', {target: {value: 'Test description EDIT', name: 'text'}});
-    component.find('Categories').find('button').at(1).simulate('click');
+    component.find('Facets').find('button').at(1).simulate('click');
     component.find('button[type="submit"]').at(0).simulate('click');
 
     await wait(10); component.update();

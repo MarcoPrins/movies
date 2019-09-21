@@ -51,20 +51,47 @@ describe MoviesController, type: :controller do
     it 'returns paginated movies if page param is passed' do
       # Pagination is stubbed for simplicity & to maintain focus of this unit test
       # on controller functionality rather than kaminari funcionality
-      expect(Movie).to receive(:page).with('1').and_return(Movie.page(1).per(1))
+      expect(Movie).to receive(:page).with('1').and_return(Movie.where(id: @movie_1.id).page(1))
 
       get :index, params: { page: 1 }
-      expect(fetch_movies_from(response)).to eq([movies[0]])
+      expect(fetch_movies_from(response)).to eq([movies[2]])
     end
 
     it 'returns a movie filtered by search term if search is passed' do
+      expect(Movie).to receive(:search).with('Action movie').and_return(Movie.where(id: @movie_1.id))
+
       get :index, params: { search: 'Action movie' }
+      expect(fetch_movies_from(response)).to eq([movies[2]])
+    end
+
+    it 'returns a movie filtered by user rating if passed' do
+      expect(Movie).to receive(:by_user_rating).with(nil, '1').and_return(Movie.where(id: @movie_1.id))
+
+      get :index, params: { rating: 1 }
       expect(fetch_movies_from(response)).to eq([movies[2]])
     end
 
     it 'returns total pages' do
       get :index
       expect(JSON.parse(response.body)['totalPages']).to eq(1)
+    end
+  end
+
+  describe 'GET category_breakdown' do
+    it 'returns the category breakdown' do
+      expect(Movie).to receive(:category_breakdown).and_return({'drama' => 8})
+
+      get :category_breakdown
+      expect(response.body).to eq("{\"drama\":8}")
+    end
+  end
+
+  describe 'GET ratings_breakdown' do
+    it 'returns the ratings breakdown' do
+      expect(Rating).to receive(:rating_breakdown).and_return({1 => 8})
+
+      get :rating_breakdown
+      expect(response.body).to eq("{\"1\":8}")
     end
   end
 

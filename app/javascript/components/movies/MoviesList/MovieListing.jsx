@@ -42,10 +42,10 @@ class MovieListing extends Component {
   }
 
   ratingColumn() {
-    const { user, movie } = this.props;
+    const { user, movie, successCallback } = this.props;
 
     if (user) {
-      return <RatingEditor rating={movie.currentUserRating} />;
+      return <RatingEditor successCallback={successCallback} rating={movie.currentUserRating} />;
     }
     else {
       return <Stars stars={movie.averageStars} />;

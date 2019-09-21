@@ -56,4 +56,19 @@ describe 'Movie' do
       expect(movies.pluck(:id).sort).to eq([@movie_1.id, @movie_2.id, @movie_4.id].sort)
     end
   end
+
+  describe 'by_user_rating' do
+    it 'filters movie by assocated user rating' do
+      user = create :user
+
+      movie_1 = create :movie, title: 'test 1'
+      movie_2 = create :movie, title: 'test 2'
+
+      rating_1 = create :rating, user_id: user.id, stars: 1, movie_id: movie_1.id
+      rating_2 = create :rating, user_id: user.id, stars: 2, movie_id: movie_2.id
+
+      movies = Movie.by_user_rating(user, 1)
+      expect(movies.pluck(:id)).to eq([movie_1.id])
+    end
+  end
 end
