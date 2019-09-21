@@ -2,36 +2,44 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import RatingEditor from './RatingEditor';
+import NewMovieButton from './NewMovieButton';
+import MovieListing from './MoviesList/MovieListing';
 import Categories from './Categories';
-import Stars from './Stars';
 import PaginationLinks from '../shared/PaginationLinks';
 
 const propTypes = {
   user: PropTypes.object,
 };
 
+// Container
 class MoviesList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       movies: [],
+      categories: {},
       page: 1,
       totalPages: 1,
       selectedCategory: null,
     }
 
+    // Computed fields
     this.headers = this.headers.bind(this);
     this.heading = this.heading.bind(this);
-    this.movieListing = this.movieListing.bind(this);
+
+    // Data fetching
+    this.fetchData = this.fetchData.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
+    this.fetchCategories = this.fetchCategories.bind(this);
+
+    // Actions
     this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
   }
 
   componentDidMount() {
-    this.fetchMovies();
+    this.fetchData();
   }
 
   headers() {
@@ -42,6 +50,7 @@ class MoviesList extends Component {
       'Text',
       'Category',
       (user ? 'Your Rating' : 'Average Rating'),
+      'Edit',
     ];
   }
 
@@ -52,26 +61,9 @@ class MoviesList extends Component {
       'All movies';
   }
 
-  movieListing(movie) {
-    const { user } = this.props;
-
-    return(
-      <tr key={movie.id}>
-        <td>{movie.title}</td>
-        <td>{movie.text}</td>
-        <td>
-          <span className="badge badge-info">
-            {movie.category}
-          </span>
-        </td>
-        <td>
-          {user ?
-            <RatingEditor rating={movie.currentUserRating} />
-            :
-            <Stars stars={movie.averageStars} />}
-        </td>
-      </tr>
-    );
+  fetchData() {
+    this.fetchMovies();
+    this.fetchCategories();
   }
 
   fetchMovies() {
@@ -92,6 +84,14 @@ class MoviesList extends Component {
       .catch(error => alert(error));
   }
 
+  fetchCategories() {
+    axios.get('/movies/categories')
+      .then((response) => {
+        this.setState({categories: response.data})
+      })
+      .catch(error => alert(error));
+  }
+
   selectCategory(category) {
     const { selectedCategory } = this.state;
     if (category === selectedCategory) category = null;
@@ -107,13 +107,17 @@ class MoviesList extends Component {
   }
 
   render() {
-    const { movies, selectedCategory, page, totalPages } = this.state;
+    const { movies, selectedCategory, page, totalPages, categories, creatingNewMovie } = this.state;
+    const { user } = this.props;
 
     return(
       <Fragment>
         <h1 className='spacing-bottom'>{this.heading()}</h1>
 
+        <NewMovieButton successCallback={this.fetchData} categories={categories} />
+
         <Categories
+          categories={categories}
           selectedCategory={selectedCategory}
           selectCategory={this.selectCategory}
         />
@@ -126,7 +130,17 @@ class MoviesList extends Component {
           </thead>
 
           <tbody>
-            {movies.map((movie) => this.movieListing(movie))}
+            {movies.map((movie) => {
+              return(
+                <MovieListing
+                  successCallback={this.fetchData}
+                  categories={categories}
+                  key={movie.id}
+                  user={user}
+                  movie={movie}
+                />
+              );
+            })}
           </tbody>
         </table>
 

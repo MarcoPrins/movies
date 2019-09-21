@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include Serializable
 
   has_many :ratings
+  has_many :movies
 
   validates :email, presence: true
   validates :email, uniqueness: true

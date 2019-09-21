@@ -5,18 +5,10 @@ import wait from 'waait';
 
 import Categories from '../../../components/movies/Categories';
 
-const stubAxios = (categoriesResponse) => {
-  axios.get = jest.fn(() => {
-    return Promise.resolve({data: categoriesResponse});
-  });
-};
-
 describe('Categories', () => {
   it('fetches categories and displays buttons for each of them, with selected one active', async () => {
-    stubAxios({action: 2, drama: 1, suspense: 8});
-
     const component = mount(
-      <Categories selectedCategory='drama' />
+      <Categories categories={{action: 2, drama: 1, suspense: 8}} selectedCategory='drama' />
     );
     await wait(0); component.update();
 
@@ -33,12 +25,24 @@ describe('Categories', () => {
     ]);
   });
 
+  it('can hide the total count numbers', async () => {
+    const component = mount(
+      <Categories categories={{action: 2, drama: 1}} showCount={false} selectedCategory='drama' />
+    );
+    await wait(0); component.update();
+
+    const buttons = component.find('button');
+    expect(buttons.map(button => button.text())).toEqual([
+      'action ',
+      'drama ',
+    ]);
+  });
+
   it('calls the passed in selectCategory function when clicking a category', async () => {
-    stubAxios({action: 1, drama: 2, comedy: 3});
     const mockFunction = jest.fn();
 
     const component = mount(
-      <Categories selectedCategory='drama' selectCategory={mockFunction} />
+      <Categories categories={{action: 1, drama: 2, comedy: 3}} selectedCategory='drama' selectCategory={mockFunction} />
     );
 
     await wait(0); component.update();

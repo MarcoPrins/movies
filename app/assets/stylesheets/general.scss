@@ -45,7 +45,12 @@ button.button {
   padding-right: 10px;
 }
 
-ul.pagination li.page-item.active a.page-link {
+ul.pagination li.page-item.active a.page-link, button.btn-primary {
   background-color: $pink;
   border-color: $pink;
+
+  &:hover {
+    background-color: $pink;
+    border-color: $pink;
+  }
 }

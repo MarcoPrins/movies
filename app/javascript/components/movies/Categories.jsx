@@ -1,61 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const propTypes = {
+  categories: PropTypes.object,
   selectCategory: PropTypes.func,
   selectedCategory: PropTypes.string,
+  showCount: PropTypes.bool,
 };
 
 const defaultProps = {
   selectCategory: () => null,
+  categories: {},
+  showCount: true
 };
 
-class Categories extends Component {
-  constructor(props) {
-    super(props);
+const Categories = ({ selectCategory, selectedCategory, categories, showCount }) => {
+  const categoryNames = Object.keys(categories);
 
-    this.state = {
-      categories: {},
-    };
-
-    this.fetchCategories = this.fetchCategories.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchCategories();
-  }
-
-  fetchCategories() {
-    axios.get('/movies/categories')
-      .then((response) => {
-        this.setState({categories: response.data})
-      })
-      .catch(error => alert(error));
-  }
-
-  render() {
-    const { selectCategory, selectedCategory } = this.props;
-    const { categories } = this.state;
-    const categoryNames = Object.keys(categories);
-
-    return(
-      <div className='btn-group spacing-bottom' role='group' aria-label='Categories'>
-        {categoryNames.map((category) => {
-          return(
-            <button
-              key={category}
-              onClick={() => selectCategory(category)}
-              type='button'
-              className={`btn btn-info ${selectedCategory === category ? 'active' : ''}`}
-            >
-              {category} ({categories[category]})
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
+  return(
+    <div className='btn-group spacing-bottom' role='group' aria-label='Categories'>
+      {categoryNames.map((category) => {
+        return(
+          <button
+            key={category}
+            onClick={() => selectCategory(category)}
+            type='button'
+            className={`btn btn-info ${selectedCategory === category ? 'active' : ''}`}
+          >
+            {category} {showCount && <span>({categories[category]})</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
 };
 
 Categories.propTypes = propTypes;

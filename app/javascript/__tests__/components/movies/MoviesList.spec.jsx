@@ -71,12 +71,14 @@ describe('MoviesList', () => {
         'Description 1',
         'action',
         '',
+        'You cannot edit this movie',
       ],
       [
         'Movie 2',
         'Description 2',
         'action',
         '',
+        'You cannot edit this movie',
       ],
     ]);
   });

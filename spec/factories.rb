@@ -3,6 +3,7 @@ FactoryBot.define do
     sequence(:title) { |i| "Movie #{i}" }
     text { 'Example text' }
     category { 1 }
+    user
   end
 
   factory :rating do
