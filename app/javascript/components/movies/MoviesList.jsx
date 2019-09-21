@@ -29,7 +29,6 @@ class MoviesList extends Component {
 
     // Computed fields
     this.headers = this.headers.bind(this);
-    this.heading = this.heading.bind(this);
 
     // Data fetching
     this.fetchData = this.fetchData.bind(this);
@@ -57,13 +56,6 @@ class MoviesList extends Component {
       (user ? 'Your Rating' : 'Average Rating'),
       'Edit',
     ];
-  }
-
-  heading() {
-    const { selectedCategory } = this.state;
-    return selectedCategory ?
-      `Movies: ${selectedCategory}` :
-      'All movies';
   }
 
   fetchData() {
@@ -129,7 +121,7 @@ class MoviesList extends Component {
 
     return(
       <Fragment>
-        <h1 className='spacing-bottom'>{this.heading()}</h1>
+        <h1 className='spacing-bottom'>Movies</h1>
         <NewMovieButton successCallback={this.fetchData} categories={categories} />
 
         <input

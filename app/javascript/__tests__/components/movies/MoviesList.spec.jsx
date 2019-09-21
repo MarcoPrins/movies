@@ -6,7 +6,7 @@ import axios from 'axios';
 import MoviesList from '../../../components/movies/MoviesList';
 import Stars from '../../../components/movies/Stars';
 
-const stubAxios = (moviesResponse, categoriesResponse) => {
+const stubAxios = (moviesResponse = [], categoriesResponse = {}, ratingsResponse = {}) => {
   axios.get = jest.fn((url) => {
     if(url === '/movies') {
       return Promise.resolve({
@@ -19,6 +19,9 @@ const stubAxios = (moviesResponse, categoriesResponse) => {
     else if (url === '/movies/category_breakdown') {
       return Promise.resolve({data: categoriesResponse});
     }
+    else if (url === '/movies/rating_breakdown') {
+      return Promise.resolve({data: ratingsResponse});
+    }
     else {
       return undefined;
     }
@@ -28,8 +31,7 @@ const stubAxios = (moviesResponse, categoriesResponse) => {
 describe('MoviesList', () => {
   it('has the same number of headers as columns', async () => {
     stubAxios(
-      [{id: 1, title: 'Movie 1', text: 'Description', category: 'action', averageStars: 2}],
-      {},
+      [{id: 1, title: 'Movie 1', text: 'Description', category: 'action', averageStars: 2}]
     );
 
     const component = mount(<MoviesList />);
@@ -42,7 +44,7 @@ describe('MoviesList', () => {
   });
 
   it('displays the correct rating headers based on wheter user is present', async () => {
-    stubAxios([], {});
+    stubAxios();
 
     const componentWithoutUser = mount(<MoviesList />);
     expect(componentWithoutUser.instance().headers()[3]).toBe('Average Rating');
@@ -56,8 +58,7 @@ describe('MoviesList', () => {
       [
         {id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1},
         {id: 2, title: 'Movie 2', text: 'Description 2', category: 'action', averageStars: 2},
-      ],
-      {},
+      ]
     );
 
     const component = mount(<MoviesList />);
@@ -84,7 +85,7 @@ describe('MoviesList', () => {
   });
 
   describe('when you click a category', () => {
-    it('fetches new movies with category filters', async () => {
+    it('fetches new movies with category filter', async () => {
       stubAxios(
         [],
         {'action': 5, 'comedy': 6},
@@ -104,24 +105,6 @@ describe('MoviesList', () => {
       await wait(0); component.update();
 
       expect(component.find('tbody tr').length).toBe(1);
-    });
-
-    it('changes the heading', async () => {
-      stubAxios(
-        [],
-        {'action': 5, 'comedy': 6},
-      );
-
-      const component = mount(<MoviesList />);
-      await wait(0); component.update();
-
-      expect(component.find('h1').text()).toBe('All movies');
-
-      component.find('Facets').at(0).props().selectFacet('action');
-      await wait(0); component.update();
-
-      expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: 'action', page: 1, search: ''}});
-      expect(component.find('h1').text()).toBe('Movies: action');
     });
 
     it('goes back to the first page', async () => {
@@ -143,7 +126,56 @@ describe('MoviesList', () => {
 
       // Then check that we go back to page 1
       expect(axios.get).toHaveBeenCalledWith(
-        '/movies', {'params': {category: 'action', page: 1, search: ''}}
+        '/movies', {'params': {category: 'action', rating: null, page: 1, search: ''}}
+      );
+      expect(component.state().page).toBe(1);
+    });
+  });
+
+  describe('when you click a rating', () => {
+    it('fetches new movies with rating filter', async () => {
+      stubAxios(
+        [],
+        {},
+        {'4': 1, '5': 1},
+      );
+
+      const component = mount(<MoviesList user={{id: 1}} />);
+      await wait(0); component.update();
+
+      stubAxios(
+        [{id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1}],
+      );
+
+      expect(component.find('tbody tr').length).toBe(0);
+
+      component.find('Facets').at(1).props().selectFacet('4');
+      await wait(0); component.update();
+
+      expect(component.find('tbody tr').length).toBe(1);
+    });
+
+    it('goes back to the first page', async () => {
+      stubAxios(
+        [],
+        {},
+        {'4': 1, '5': 1},
+      );
+
+      const component = mount(<MoviesList user={{id: 1}} />);
+      await wait(0); component.update();
+
+      // First go to page 2 and make sure we are there
+      component.find('PaginationLinks').find('a').at(1).simulate('click');
+      expect(component.state().page).toBe(2);
+
+      // Click the category
+      component.find('Facets').at(1).props().selectFacet('4');
+      await wait(0); component.update();
+
+      // Then check that we go back to page 1
+      expect(axios.get).toHaveBeenCalledWith(
+        '/movies', {'params': {category: null, rating: '4', page: 1, search: ''}}
       );
       expect(component.state().page).toBe(1);
     });
@@ -151,7 +183,7 @@ describe('MoviesList', () => {
 
   describe('when you search', () => {
     it('fetches a new movie with serch term', async () => {
-      stubAxios([], {});
+      stubAxios();
 
       const component = mount(<MoviesList />);
       await wait(0); component.update();
@@ -166,12 +198,12 @@ describe('MoviesList', () => {
       component.find('input[name="search"]').simulate('change', {target: {name: 'search', value: 'Test'}})
       await wait(0); component.update();
 
-      expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: null, page: 1, search: 'Test'}});
+      expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: null, rating: null, page: 1, search: 'Test'}});
       expect(component.find('tbody tr').length).toBe(1);
     });
 
     it('goes back to the first page', async () => {
-      stubAxios([], {});
+      stubAxios();
 
       const component = mount(<MoviesList />);
       await wait(0); component.update();
@@ -186,7 +218,7 @@ describe('MoviesList', () => {
 
       // Then check that we go back to page 1
       expect(axios.get).toHaveBeenCalledWith(
-        '/movies', {'params': {category: null, page: 1, search: 'Test'}}
+        '/movies', {'params': {category: null, rating: null, page: 1, search: 'Test'}}
       );
       expect(component.state().page).toBe(1);
     });
@@ -194,7 +226,7 @@ describe('MoviesList', () => {
 
   describe('when you click a pagination link', () => {
     it('fetches the new page', async () => {
-      stubAxios([], {});
+      stubAxios();
 
       const component = mount(<MoviesList />);
       await wait(0); component.update();
@@ -202,7 +234,7 @@ describe('MoviesList', () => {
       component.find('PaginationLinks').props().onPageClick(2);
 
       expect(axios.get).toHaveBeenCalledWith(
-        '/movies', {'params': {category: null, page: 2, search: ''}}
+        '/movies', {'params': {category: null, rating: null, page: 2, search: ''}}
       );
     })
   })
