@@ -70,7 +70,7 @@ describe('MoviesList', () => {
       [
         'Movie 1',
         'Description 1',
-        'action',
+        'Action',
         '',
         '',
         '',
@@ -78,7 +78,7 @@ describe('MoviesList', () => {
       [
         'Movie 2',
         'Description 2',
-        'action',
+        'Action',
         '',
         '',
         '',

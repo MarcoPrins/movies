@@ -5,10 +5,16 @@ import wait from 'waait';
 
 import Facets from '../../../components/movies/Facets';
 
+const facetMappings = {
+  action: 'Action',
+  drama: 'Drama',
+  'Random string': 'Other',
+};
+
 describe('Facets', () => {
   it('displays buttons for each facet, with selected one active', async () => {
     const component = mount(
-      <Facets facets={{action: 2, drama: 1, 'Facet with a string name': 8}} selectedFacet='drama' />
+      <Facets displayMapping={facetMappings} facets={{action: 2, drama: 1, 'Random string': 8}} selectedFacet='drama' />
     );
     await wait(0); component.update();
 
@@ -19,22 +25,22 @@ describe('Facets', () => {
       'btn btn-info ',
     ]);
     expect(buttons.map(button => button.text())).toEqual([
-      'action (2)',
-      'drama (1)',
-      'Facet with a string name (8)',
+      'Action (2)',
+      'Drama (1)',
+      'Other (8)',
     ]);
   });
 
   it('can hide the total count numbers', async () => {
     const component = mount(
-      <Facets facets={{action: 2, drama: 1}} showCount={false} selectedFacet='drama' />
+      <Facets displayMapping={facetMappings} facets={{action: 2, drama: 1}} showCount={false} selectedFacet='drama' />
     );
     await wait(0); component.update();
 
     const buttons = component.find('button');
     expect(buttons.map(button => button.text())).toEqual([
-      'action ',
-      'drama ',
+      'Action ',
+      'Drama ',
     ]);
   });
 
@@ -42,7 +48,7 @@ describe('Facets', () => {
     const mockFunction = jest.fn();
 
     const component = mount(
-      <Facets facets={{action: 1, drama: 2, comedy: 3}} selectedFacet='drama' selectFacet={mockFunction} />
+      <Facets displayMapping={facetMappings} facets={{action: 1, drama: 2, comedy: 3}} selectedFacet='drama' selectFacet={mockFunction} />
     );
 
     await wait(0); component.update();

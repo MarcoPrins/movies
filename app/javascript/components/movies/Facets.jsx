@@ -7,15 +7,17 @@ const propTypes = {
   selectFacet: PropTypes.func,
   selectedFacet: PropTypes.string,
   showCount: PropTypes.bool,
+  displayMapping: PropTypes.object,
 };
 
 const defaultProps = {
   selectFacet: () => null,
   facets: {},
-  showCount: true
+  showCount: true,
+  displayMapping: {},
 };
 
-const Facets = ({ selectFacet, selectedFacet, facets, showCount }) => {
+const Facets = ({ selectFacet, selectedFacet, facets, showCount, displayMapping }) => {
   const facetNames = Object.keys(facets);
 
   return(
@@ -29,7 +31,7 @@ const Facets = ({ selectFacet, selectedFacet, facets, showCount }) => {
               type='button'
               className={`btn btn-info ${selectedFacet === facet ? 'active' : ''}`}
             >
-              {facet} {showCount && <span>({facets[facet]})</span>}
+              {displayMapping[facet]} {showCount && <span className='extra-info'>({facets[facet]})</span>}
             </button>
           );
         })}

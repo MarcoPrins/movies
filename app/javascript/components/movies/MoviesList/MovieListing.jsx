@@ -6,6 +6,7 @@ import Stars from '../Stars';
 import DeleteMovieButton from '../DeleteMovieButton';
 import MovieForm from '../MovieForm';
 import Modal from '../../shared/Modal';
+import { categoriesMapping } from '../../../constants/facetMappings';
 
 const propTypes = {
   user: PropTypes.shape({
@@ -105,7 +106,7 @@ class MovieListing extends Component {
         <td>{movie.text}</td>
         <td>
           <span className="badge badge-info">
-            {movie.category}
+            {categoriesMapping[movie.category]}
           </span>
         </td>
         <td>{this.ratingColumn()}</td>

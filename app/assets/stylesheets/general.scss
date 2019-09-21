@@ -1,6 +1,6 @@
 $pink: #f56991;
 $dark-grey: #777;
-$text-color: #ddd;
+$nav-text-color: #ddd;
 
 // For anchors without href, such as the ones that only use onClick bindings
 a { cursor: pointer; }
@@ -8,7 +8,7 @@ a { cursor: pointer; }
 nav#main-nav {
   margin-bottom: 40px;
   padding: 20px;
-  color: $text-color;
+  color: $nav-text-color;
 
   span.pink {
     color: $pink;
@@ -53,4 +53,8 @@ ul.pagination li.page-item.active a.page-link, button.btn-primary {
     background-color: $pink;
     border-color: $pink;
   }
+}
+
+.extra-info {
+  color: #eee;
 }

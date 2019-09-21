@@ -6,6 +6,7 @@ import NewMovieButton from './NewMovieButton';
 import MovieListing from './MoviesList/MovieListing';
 import Facets from './Facets';
 import PaginationLinks from '../shared/PaginationLinks';
+import { categoriesMapping, ratingsMapping } from '../../constants/facetMappings';
 
 const propTypes = {
   user: PropTypes.object,
@@ -137,6 +138,7 @@ class MoviesList extends Component {
         <div>
           Filter by category:
           <Facets
+            displayMapping={categoriesMapping}
             facets={categories}
             selectedFacet={selectedCategory}
             selectFacet={(value) => this.selectFacet('selectedCategory', value)}
@@ -144,9 +146,10 @@ class MoviesList extends Component {
         </div>
 
         {user &&
-          <div>
+          <div className='facets-filter'>
             Filter by your rating:
             <Facets
+              displayMapping={ratingsMapping}
               facets={ratings}
               selectedFacet={selectedRating}
               selectFacet={(value) => this.selectFacet('selectedRating', value)}
