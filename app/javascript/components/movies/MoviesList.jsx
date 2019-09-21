@@ -54,7 +54,8 @@ class MoviesList extends Component {
       'Text',
       'Category',
       (user ? 'Your Rating' : 'Average Rating'),
-      'Edit',
+      '',
+      '',
     ];
   }
 
@@ -155,7 +156,7 @@ class MoviesList extends Component {
         <table className='table'>
           <thead>
             <tr>
-              {this.headers().map((header) => <th key={header} scope='col'>{header}</th>)}
+              {this.headers().map((header, i) => <th key={i} scope='col'>{header}</th>)}
             </tr>
           </thead>
 
