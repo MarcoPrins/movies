@@ -23,7 +23,6 @@ describe('MovieForm', () => {
     component.find('Categories').find('button').at(0).simulate('click');
     component.find('button[type="submit"]').at(0).simulate('click');
 
-
     await wait(10); component.update();
 
     expect(axios.post).toHaveBeenCalledWith('/movies', movieAttributes);
