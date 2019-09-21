@@ -13,7 +13,7 @@ class Rating < ActiveRecord::Base
             uniqueness: { scope: :user_id }
 
   def self.rating_breakdown(user)
-    self.where(user_id: user.id)
+    where(user_id: user.id)
       .group(:stars)
       .count
   end

@@ -20,7 +20,7 @@ describe('MovieListing', () => {
       const component = shallow(<MovieListing movie={movie} user={{id: 2}} />);
 
       expect(component.find('td').at(4).html()).toBe(
-        shallow(<td><a>Edit</a></td>).html()
+        shallow(<td><button className='btn btn-outline-secondary btn-small'>Edit</button></td>).html()
       );
     });
 
@@ -28,7 +28,7 @@ describe('MovieListing', () => {
       const component = shallow(<MovieListing movie={movie} user={{id: 20}} />);
 
       expect(component.find('td').at(4).html()).toBe(
-        shallow(<td><span>You cannot edit this movie</span></td>).html()
+        shallow(<td></td>).html()
       );
     });
 
@@ -36,7 +36,7 @@ describe('MovieListing', () => {
       const component = shallow(<MovieListing movie={movie} />);
 
       expect(component.find('td').at(4).html()).toBe(
-        shallow(<td><span>You cannot edit this movie</span></td>).html()
+        shallow(<td></td>).html()
       );
     });
   });
@@ -50,7 +50,7 @@ describe('MovieListing', () => {
           categories={{drama: 8}}
         />
       );
-      component.find('td').at(4).find('a').simulate('click');
+      component.find('td').at(4).find('button').simulate('click');
       await wait(0); component.update();
 
       const formProps = component.find('MovieForm').at(0).props();

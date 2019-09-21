@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import RatingEditor from '../RatingEditor';
 import Stars from '../Stars';
+import DeleteMovieButton from '../DeleteMovieButton';
 import MovieForm from '../MovieForm';
 import Modal from '../../shared/Modal';
 
@@ -31,9 +32,13 @@ class MovieListing extends Component {
       movie: props.movie,
     };
 
-    this.toggleEdit = this.toggleEdit.bind(this);
+    // Computed fields
     this.ratingColumn = this.ratingColumn.bind(this);
     this.editColumn = this.editColumn.bind(this);
+    this.userOwnsMovie = this.userOwnsMovie.bind(this);
+
+    // Actions
+    this.toggleEdit = this.toggleEdit.bind(this);
     this.afterUpdate = this.afterUpdate.bind(this);
   }
 
@@ -44,16 +49,13 @@ class MovieListing extends Component {
   ratingColumn() {
     const { user, movie, successCallback } = this.props;
 
-    if (user) {
-      return <RatingEditor successCallback={successCallback} rating={movie.currentUserRating} />;
-    }
-    else {
-      return <Stars stars={movie.averageStars} />;
-    }
+    return user ?
+      <RatingEditor successCallback={successCallback} rating={movie.currentUserRating} /> :
+      <Stars stars={movie.averageStars} />;
   }
 
   editColumn() {
-    const { user, categories } = this.props;
+    const { categories } = this.props;
     const { editing, movie } = this.state;
 
     if (editing) {
@@ -63,12 +65,25 @@ class MovieListing extends Component {
         </Modal>
       );
     }
-    else if (user && user.id === movie.userId) {
-      return <a onClick={this.toggleEdit}>Edit</a>;
+    else if (this.userOwnsMovie()) {
+      return <button className='btn btn-outline-secondary btn-small' onClick={this.toggleEdit}>Edit</button>;
     }
     else {
-      return <span>You cannot edit this movie</span>;
+      return <Fragment />;
     }
+  }
+
+  userOwnsMovie() {
+    const { user, movie } = this.props;
+    return user && user.id === movie.userId;
+  }
+
+  deleteColumn() {
+    const { movie, successCallback } = this.props;
+
+    return this.userOwnsMovie() ?
+      <DeleteMovieButton movie={movie} successCallback={successCallback} /> :
+      <Fragment />;
   }
 
   afterUpdate(response) {
@@ -95,6 +110,7 @@ class MovieListing extends Component {
         </td>
         <td>{this.ratingColumn()}</td>
         <td>{this.editColumn()}</td>
+        <td>{this.deleteColumn()}</td>
       </tr>
     );
   }
