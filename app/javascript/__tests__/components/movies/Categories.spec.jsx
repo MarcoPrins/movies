@@ -25,6 +25,19 @@ describe('Categories', () => {
     ]);
   });
 
+  it('can hide the total count numbers', async () => {
+    const component = mount(
+      <Categories categories={{action: 2, drama: 1}} showCount={false} selectedCategory='drama' />
+    );
+    await wait(0); component.update();
+
+    const buttons = component.find('button');
+    expect(buttons.map(button => button.text())).toEqual([
+      'action ',
+      'drama ',
+    ]);
+  });
+
   it('calls the passed in selectCategory function when clicking a category', async () => {
     const mockFunction = jest.fn();
 
