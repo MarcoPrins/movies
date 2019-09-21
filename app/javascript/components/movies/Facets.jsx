@@ -19,19 +19,21 @@ const Facets = ({ selectFacet, selectedFacet, facets, showCount }) => {
   const facetNames = Object.keys(facets);
 
   return(
-    <div className='btn-group spacing-bottom' role='group'>
-      {facetNames.map((facet) => {
-        return(
-          <button
-            key={facet}
-            onClick={() => selectFacet(facet)}
-            type='button'
-            className={`btn btn-info ${selectedFacet === facet ? 'active' : ''}`}
-          >
-            {facet} {showCount && <span>({facets[facet]})</span>}
-          </button>
-        );
-      })}
+    <div>
+      <div className='btn-group spacing-bottom' role='group'>
+        {facetNames.map((facet) => {
+          return(
+            <button
+              key={facet}
+              onClick={() => selectFacet(facet)}
+              type='button'
+              className={`btn btn-info ${selectedFacet === facet ? 'active' : ''}`}
+            >
+              {facet} {showCount && <span>({facets[facet]})</span>}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

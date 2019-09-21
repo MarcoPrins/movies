@@ -38,8 +38,9 @@ class MoviesController < ApplicationController
   end
 
   def apply_filters(movies)
-    movies = movies.search(index_params[:search])            if index_params[:search].present?
-    movies = movies.where(category: index_params[:category]) if index_params[:category].present?
+    movies = movies.search(index_params[:search])                       if index_params[:search].present?
+    movies = movies.where(category: index_params[:category])            if index_params[:category].present?
+    movies = movies.by_user_rating(current_user, index_params[:rating]) if index_params[:rating].present?
     movies = movies.page(index_params[:page])
 
     movies
@@ -59,6 +60,6 @@ class MoviesController < ApplicationController
   end
 
   def index_params
-    params.permit(:category, :page, :search)
+    params.permit(:category, :page, :search, :rating)
   end
 end
