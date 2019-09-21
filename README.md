@@ -21,7 +21,7 @@ Here's a list of the assignment tasks and which ones have been done or left out:
 - [x] Home page: Movies list
 - [x] Full text search
 - [x] Filter by category (without reload)
-- [ ] Filter by rating (without reload)
+- [x] Filter by rating (without reload) - **Filters by current user's rating, only if logged in.**
 - [ ] Movie CRUD for logged-in users (In list)
 - [x] Pagination
 - [x] Frontend testing
