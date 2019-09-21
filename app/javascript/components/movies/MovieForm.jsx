@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import Facets from './Facets';
+import { categoriesMapping } from '../../constants/facetMappings';
 
 const propTypes = {
   movie: PropTypes.shape({
@@ -117,6 +118,7 @@ class MovieForm extends Component {
           facets={categories}
           selectedFacet={category}
           showCount={false}
+          displayMapping={categoriesMapping}
           selectFacet={
             (category) => this.handleChange({
               target: {
