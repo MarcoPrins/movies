@@ -16,6 +16,7 @@ class MoviesList extends Component {
 
     this.state = {
       movies: [],
+      categories: {},
       page: 1,
       totalPages: 1,
       selectedCategory: null,
@@ -23,13 +24,20 @@ class MoviesList extends Component {
 
     this.headers = this.headers.bind(this);
     this.heading = this.heading.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
+    this.fetchCategories = this.fetchCategories.bind(this);
     this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
     this.fetchMovies();
+    this.fetchCategories();
   }
 
   headers() {
@@ -69,6 +77,14 @@ class MoviesList extends Component {
       .catch(error => alert(error));
   }
 
+  fetchCategories() {
+    axios.get('/movies/categories')
+      .then((response) => {
+        this.setState({categories: response.data})
+      })
+      .catch(error => alert(error));
+  }
+
   selectCategory(category) {
     const { selectedCategory } = this.state;
     if (category === selectedCategory) category = null;
@@ -84,7 +100,7 @@ class MoviesList extends Component {
   }
 
   render() {
-    const { movies, selectedCategory, page, totalPages } = this.state;
+    const { movies, selectedCategory, page, totalPages, categories } = this.state;
     const { user } = this.props;
 
     return(
@@ -92,6 +108,7 @@ class MoviesList extends Component {
         <h1 className='spacing-bottom'>{this.heading()}</h1>
 
         <Categories
+          categories={categories}
           selectedCategory={selectedCategory}
           selectCategory={this.selectCategory}
         />
@@ -104,7 +121,17 @@ class MoviesList extends Component {
           </thead>
 
           <tbody>
-            {movies.map(movie => <MovieListing key={movie.id} user={user} movie={movie} />)}
+            {movies.map((movie) => {
+              return(
+                <MovieListing
+                  successCallback={this.fetchData}
+                  categories={categories}
+                  key={movie.id}
+                  user={user}
+                  movie={movie}
+                />
+              );
+            })}
           </tbody>
         </table>
 

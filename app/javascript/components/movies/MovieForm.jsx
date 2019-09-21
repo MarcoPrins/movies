@@ -12,11 +12,13 @@ const propTypes = {
     category: PropTypes.string,
   }),
   successCallback: PropTypes.func,
+  categories: PropTypes.object,
 };
 
 const defaultProps = {
   successCallback: () => null,
   movie: { id: null },
+  categories: {},
 };
 
 class MovieForm extends Component {
@@ -81,6 +83,7 @@ class MovieForm extends Component {
   }
 
   render() {
+    const { categories } = this.props;
     const { id } = this.props.movie;
     const { title, text, category } = this.state;
     const inputProps = {
@@ -111,6 +114,7 @@ class MovieForm extends Component {
         </div>
 
         <Categories
+          categories={categories}
           selectedCategory={category}
           selectCategory={
             (category) => this.handleChange({

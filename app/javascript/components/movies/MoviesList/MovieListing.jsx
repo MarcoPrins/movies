@@ -18,6 +18,8 @@ const propTypes = {
     currentUserRating: PropTypes.object,
     averageStars: PropTypes.number,
   }),
+  successCallback: PropTypes.func,
+  categories: PropTypes.object,
 };
 
 class MovieListing extends Component {
@@ -51,13 +53,13 @@ class MovieListing extends Component {
   }
 
   editColumn() {
-    const { user } = this.props;
+    const { user, categories } = this.props;
     const { editing, movie } = this.state;
 
     if (editing) {
       return(
         <Modal title='Edit Movie' toggle={this.toggleEdit} open={editing}>
-          <MovieForm movie={movie} successCallback={this.afterUpdate} />
+          <MovieForm categories={categories} movie={movie} successCallback={this.afterUpdate} />
         </Modal>
       );
     }
@@ -70,9 +72,11 @@ class MovieListing extends Component {
   }
 
   afterUpdate(response) {
+    const { successCallback } = this.props;
+
     this.setState(
-      { movie: response.data },
-      this.toggleEdit
+      { movie: response.data, editing: false },
+      successCallback,
     );
   }
 
