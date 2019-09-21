@@ -15,6 +15,7 @@ class Movie < ActiveRecord::Base
   validates :title, uniqueness: true
 
   default_scope { order('created_at DESC') }
+  scope :search, ->(term) { where('title ilike ? OR text ilike ?', "%#{term}%", "%#{term}%") }
 
   enum category: {
     action:    1,

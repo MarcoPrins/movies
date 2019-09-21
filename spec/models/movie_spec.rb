@@ -44,4 +44,16 @@ describe 'Movie' do
       )
     end
   end
+
+  describe 'search' do
+    it 'returns records matching title or text' do
+      @movie_1 = create :movie, title: 'searchterm xxxxxx', text: 'xxxxxx'
+      @movie_2 = create :movie, title: 'xxxxxx', text: 'xxx searchterm'
+      @movie_3 = create :movie, title: 'xxx', text: 'xxx'
+      @movie_4 = create :movie, title: 'xx searchterm', text: 'xx'
+
+      movies = Movie.search('searchterm')
+      expect(movies.pluck(:id).sort).to eq([@movie_1.id, @movie_2.id, @movie_4.id].sort)
+    end
+  end
 end

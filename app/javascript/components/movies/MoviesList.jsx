@@ -22,6 +22,7 @@ class MoviesList extends Component {
       page: 1,
       totalPages: 1,
       selectedCategory: null,
+      search: '',
     }
 
     // Computed fields
@@ -36,6 +37,7 @@ class MoviesList extends Component {
     // Actions
     this.selectPage = this.selectPage.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
   }
 
   componentDidMount() {
@@ -67,12 +69,13 @@ class MoviesList extends Component {
   }
 
   fetchMovies() {
-    const { selectedCategory, page } = this.state;
+    const { selectedCategory, page, search } = this.state;
 
     axios.get('/movies', {
       params: {
         category: selectedCategory,
         page,
+        search,
       },
     })
       .then((response) => {
@@ -95,26 +98,35 @@ class MoviesList extends Component {
   selectCategory(category) {
     const { selectedCategory } = this.state;
     if (category === selectedCategory) category = null;
-
-    this.setState(
-      {selectedCategory: category, page: 1},
-      this.fetchMovies
-    );
+    this.updateFilter({target: {name: 'selectedCategory', value: category}});
   }
 
   selectPage(page) {
     this.setState({ page }, this.fetchMovies);
   }
 
+  updateFilter(event) {
+    const { target } = event;
+    this.setState({ [target.name]: target.value, page: 1 }, this.fetchMovies);
+  }
+
   render() {
-    const { movies, selectedCategory, page, totalPages, categories, creatingNewMovie } = this.state;
+    const { movies, selectedCategory, page, totalPages, categories, creatingNewMovie, search } = this.state;
     const { user } = this.props;
 
     return(
       <Fragment>
         <h1 className='spacing-bottom'>{this.heading()}</h1>
-
         <NewMovieButton successCallback={this.fetchData} categories={categories} />
+
+        <input
+          type='text'
+          name='search'
+          value={search}
+          onChange={this.updateFilter}
+          className='form-control spacing-bottom'
+          placeholder='Search title or text'
+        />
 
         <Categories
           categories={categories}

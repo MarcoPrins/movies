@@ -19,7 +19,7 @@ Here's a list of the assignment tasks and which ones have been done or left out:
 - [x] Only logged-in users can rate
 - [x] Average rating shown for visitors
 - [x] Home page: Movies list
-- [ ] Full text search
+- [x] Full text search
 - [x] Filter by category (without reload)
 - [ ] Filter by rating (without reload)
 - [ ] Movie CRUD for logged-in users (In list)
