@@ -14,7 +14,7 @@ Here is a test user:<br>
 Here's a list of the assignment tasks and which ones have been done or left out:
 
 - [x] Movie: Title, Text, Ratings, Category
-- [ ] All REST Actions for movie
+- [x] All REST Actions for movie
 - [x] Rating (5-star system) for movies
 - [x] Only logged-in users can rate
 - [x] Average rating shown for visitors
@@ -22,7 +22,7 @@ Here's a list of the assignment tasks and which ones have been done or left out:
 - [x] Full text search
 - [x] Filter by category (without reload)
 - [x] Filter by rating (without reload) - **Filters by current user's rating, only if logged in.**
-- [ ] Movie CRUD for logged-in users (In list)
+- [x] Movie CRUD for logged-in users (In list)
 - [x] Pagination
 - [x] Frontend testing
 - [x] Deployment on Heroku
