@@ -86,10 +86,7 @@ describe('MoviesList', () => {
   describe('when you click a category', () => {
     it('fetches new movies with category filters', async () => {
       stubAxios(
-        [
-          {id: 1, title: 'Movie 1', text: 'Action movie', category: 'action', averageStars: 1},
-          {id: 2, title: 'Movie 2', text: 'Drama movie', category: 'drama', averageStars: 1}
-        ],
+        [],
         {'action': 5, 'comedy': 6},
       );
 
@@ -101,11 +98,10 @@ describe('MoviesList', () => {
         {'action': 5, 'comedy': 6},
       );
 
-      expect(component.find('tbody tr').length).toBe(2);
+      expect(component.find('tbody tr').length).toBe(0);
 
       component.find('Categories').props().selectCategory('action');
       await wait(0); component.update();
-      // TODO: expect component to be called with params: {category: 'action'}
 
       expect(component.find('tbody tr').length).toBe(1);
     });
@@ -124,6 +120,7 @@ describe('MoviesList', () => {
       component.find('Categories').props().selectCategory('action');
       await wait(0); component.update();
 
+      expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: 'action', page: 1, search: ''}});
       expect(component.find('h1').text()).toBe('Movies: action');
     });
 
@@ -146,7 +143,50 @@ describe('MoviesList', () => {
 
       // Then check that we go back to page 1
       expect(axios.get).toHaveBeenCalledWith(
-        '/movies', {'params': {'category': 'action', 'page': 1}}
+        '/movies', {'params': {category: 'action', page: 1, search: ''}}
+      );
+      expect(component.state().page).toBe(1);
+    });
+  });
+
+  describe('when you search', () => {
+    it('fetches a new movie with serch term', async () => {
+      stubAxios([], {});
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      stubAxios(
+        [{id: 1, title: 'Movie 1', text: 'Description 1', category: 'action', averageStars: 1}],
+        {'action': 5, 'comedy': 6},
+      );
+
+      expect(component.find('tbody tr').length).toBe(0);
+
+      component.find('input[name="search"]').simulate('change', {target: {name: 'search', value: 'Test'}})
+      await wait(0); component.update();
+
+      expect(axios.get).toHaveBeenCalledWith('/movies', {params: {category: null, page: 1, search: 'Test'}});
+      expect(component.find('tbody tr').length).toBe(1);
+    });
+
+    it('goes back to the first page', async () => {
+      stubAxios([], {});
+
+      const component = mount(<MoviesList />);
+      await wait(0); component.update();
+
+      // First go to page 2 and make sure we are there
+      component.find('PaginationLinks').find('a').at(1).simulate('click');
+      expect(component.state().page).toBe(2);
+
+      // Search
+      component.find('input[name="search"]').simulate('change', {target: {name: 'search', value: 'Test'}})
+      await wait(0); component.update();
+
+      // Then check that we go back to page 1
+      expect(axios.get).toHaveBeenCalledWith(
+        '/movies', {'params': {category: null, page: 1, search: 'Test'}}
       );
       expect(component.state().page).toBe(1);
     });
@@ -162,7 +202,7 @@ describe('MoviesList', () => {
       component.find('PaginationLinks').props().onPageClick(2);
 
       expect(axios.get).toHaveBeenCalledWith(
-        '/movies', {'params': {'category': null, 'page': 2}}
+        '/movies', {'params': {category: null, page: 2, search: ''}}
       );
     })
   })
