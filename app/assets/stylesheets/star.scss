@@ -3,13 +3,17 @@
 $gold: #FC0;
 $light_gold: lighten($gold, 30%);
 
-.ratingEditor .star {
-  cursor: pointer;
-  opacity: 100%;
-  border-bottom: .7em solid $light-gold;
+.ratingEditor {
+  width: 190px;
 
-  &:before, &:after {
+  .star {
+    cursor: pointer;
+    opacity: 100%;
     border-bottom: .7em solid $light-gold;
+
+    &:before, &:after {
+      border-bottom: .7em solid $light-gold;
+    }
   }
 }
 
