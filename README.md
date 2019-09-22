@@ -31,5 +31,5 @@ Here's a list of the assignment tasks and which ones have been done or left out:
 Technologies:
 - [x] Rails
 - [x] Twitter bootstrap
-- [ ] Unsemantic
+- [ ] ~~Unsemantic~~ - _made the assumption that only one of the two (Bootstrap & unsemantic) needs to be used._
 - [x] React.js
