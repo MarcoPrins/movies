@@ -124,7 +124,7 @@ class MoviesList extends Component {
     return(
       <Fragment>
         <h1 className='spacing-bottom'>Movies</h1>
-        <NewMovieButton successCallback={this.fetchData} categories={categories} />
+        {user && <NewMovieButton successCallback={this.fetchData} categories={categories} />}
 
         <input
           type='text'
